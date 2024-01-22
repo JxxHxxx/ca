@@ -1,0 +1,12 @@
+### 사용자의 REPOSITORY 조회 API
+# LINK : https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#list-repositories-for-a-user
+# Query params sort = pushed (푸시를 기준으로)
+GET https://api.github.com/users/jxxhxxx/repos?sort=pushed
+Content-Type: application/json
+
+### 커밋 조회 API
+GET https://api.github.com/repos/jxxhxxx/huga-gaza/commits?since=2024-01-21T15:00:00Z
+
+
+### 커밋 조회 API2
+GET http://api.github.com/repos/jxxhxxx/huga-gaza/commits?since=2024-01-21T16:00:00Z
