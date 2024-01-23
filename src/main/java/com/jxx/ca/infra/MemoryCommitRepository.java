@@ -1,7 +1,7 @@
-package com.jxx.ca;
+package com.jxx.ca.infra;
 
+import com.jxx.ca.domain.Member;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
-public class MemoryCommitRepositoryV2 {
+public class MemoryCommitRepository {
 
     private static Map<String, Member> store = new ConcurrentHashMap<>();
 

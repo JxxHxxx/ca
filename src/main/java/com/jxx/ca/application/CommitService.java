@@ -1,5 +1,7 @@
-package com.jxx.ca;
+package com.jxx.ca.application;
 
+import com.jxx.ca.domain.Member;
+import com.jxx.ca.infra.MemoryCommitRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommitService {
 
-    private final MemoryCommitRepositoryV2 memoryCommitRepository;
+    private final MemoryCommitRepository memoryCommitRepository;
 
     public void notification() {
         List<Member> members = memoryCommitRepository.getAll();

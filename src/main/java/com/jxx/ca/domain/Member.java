@@ -1,4 +1,4 @@
-package com.jxx.ca;
+package com.jxx.ca.domain;
 
 import lombok.Getter;
 
