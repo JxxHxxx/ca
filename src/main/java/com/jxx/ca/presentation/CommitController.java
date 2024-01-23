@@ -1,5 +1,6 @@
 package com.jxx.ca.presentation;
 
+import com.jxx.ca.application.CommitService;
 import com.jxx.ca.infra.MemoryCommitRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import java.util.Map;
 public class CommitController {
 
     private final MemoryCommitRepository commitRepository;
+    private final CommitService commitService;
 
     // 가장 최근 push 된 레포 조회
     @GetMapping("/users/{username}/recently-repo")
@@ -58,5 +60,15 @@ public class CommitController {
         } else {
             log.info("오늘 커밋 했어요.");
         }
+    }
+
+    @GetMapping("/commits")
+    public void checkTodayCommits(@RequestParam("sinceTime") String sinceTime) {
+        commitService.checkTodayCommits(sinceTime);
+    }
+
+    @GetMapping("/notifications")
+    public void notificate() {
+        commitService.notification();
     }
 }

@@ -1,0 +1,11 @@
+### 사용자 추가1
+GET http://localhost:8080/users/jxxHxxx/recently-repo
+
+### 사용자 추가2
+GET http://localhost:8080/users/fredlee613/recently-repo
+
+### 특정일 커밋 했는지 체크
+GET http://localhost:8080/commits?sinceTime=2024-01-21T15:00:00Z
+
+### 알림
+GET http://localhost:8080/notifications

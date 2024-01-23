@@ -1,7 +1,7 @@
 ### 사용자의 REPOSITORY 조회 API
 # LINK : https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#list-repositories-for-a-user
 # Query params sort = pushed (푸시를 기준으로)
-GET https://api.github.com/users/jxxhxxx/repos?sort=pushed
+GET https://api.github.com/users/jxxhxxx/repos?sort=pushed&page=1&per_page=1
 Content-Type: application/json
 
 ### 커밋 조회 API

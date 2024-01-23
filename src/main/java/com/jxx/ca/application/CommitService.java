@@ -28,7 +28,7 @@ public class CommitService {
         }
     }
 
-    public void checkTodayCommit(String sinceTime) {
+    public void checkTodayCommits(String sinceTime) {
         RestTemplate restTemplate = new RestTemplate();
 
         List<Member> members = memoryCommitRepository.getAll();
