@@ -18,18 +18,19 @@ public class CommitAlarmController {
         commitAlarmService.enrollMember(form);
     }
 
-    // 1.
+    // STEP 1
     @GetMapping("/users/recently-repo")
     public void searchRecentlyPushedRepo() {
         commitAlarmService.searchRecentlyPushedRepo();
     }
 
-    // 2.커밋 여부 확인
+    // STEP 2
     @GetMapping("/check-commit")
     public void checkCommitDone(@RequestParam("since") String sinceTime) {
         commitAlarmService.checkTodayCommit(sinceTime);
     }
 
+    // STEP 3
     @GetMapping("/notifications")
     public void notificate() {
         commitAlarmService.notificate();
