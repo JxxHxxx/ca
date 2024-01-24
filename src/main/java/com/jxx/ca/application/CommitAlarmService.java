@@ -1,7 +1,6 @@
 package com.jxx.ca.application;
 
 import com.jxx.ca.domain.GithubMember;
-import com.jxx.ca.domain.Member;
 import com.jxx.ca.domain.TodayCommit;
 import com.jxx.ca.infra.GithubMemberRepository;
 import com.jxx.ca.infra.TodayCommitRepository;
@@ -33,15 +32,13 @@ public class CommitAlarmService {
     public void searchRecentlyPushedRepo() {
         List<GithubMember> githubMembers = githubMemberRepository.findAll();
 
-        String recentlyRepoName = receiveRecentlyRepoName(githubMembers.get(0).getGithubName());
-
         List<TodayCommit> todayCommits = new ArrayList<>();
         for (GithubMember githubMember : githubMembers) {
+            String recentlyRepoName = receiveRecentlyRepoName(githubMember.getGithubName());
             TodayCommit todayCommit = new TodayCommit(githubMember, LocalDate.now(), recentlyRepoName);
             todayCommits.add(todayCommit);
         }
         todayCommitRepository.saveAll(todayCommits);
-
     }
 
     private String receiveRecentlyRepoName(String githubMemberName) {

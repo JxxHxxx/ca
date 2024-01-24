@@ -1,11 +1,22 @@
 ### 사용자 추가1
-GET http://localhost:8080/users/jxxHxxx/recently-repo
+POST http://localhost:8080/users/enroll
+Content-Type: application/json
+
+{
+  "githubName" : "JxxHxxx"
+}
 
 ### 사용자 추가2
-GET http://localhost:8080/users/fredlee613/recently-repo
+POST http://localhost:8080/users/enroll
+Content-Type: application/json
 
-### 특정일 커밋 했는지 체크
-GET http://localhost:8080/commits?sinceTime=2024-01-21T15:00:00Z
+{
+  "githubName" : "fredlee613"
+}
 
-### 알림
-GET http://localhost:8080/notifications
+### 최근 푸시된 레포지토리 생성
+GET http://localhost:8080/users/recently-repo
+
+### 특정일 (가장 최근에 PUSH된 Repository만 확인)커밋했는지 확인
+GET http://localhost:8080/check-commit?since=2024-01-23T15:00:00Z
+
