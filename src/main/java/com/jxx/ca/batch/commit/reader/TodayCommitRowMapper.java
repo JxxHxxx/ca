@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Component
 public class TodayCommitRowMapper implements RowMapper<TodayCommitModel> {
@@ -20,9 +21,10 @@ public class TodayCommitRowMapper implements RowMapper<TodayCommitModel> {
         String recentlyPushedRepoName = rs.getString("RECENTLY_PUSHED_REPO_NAME");
         Boolean done = "Y".equals(rs.getString("DONE"));
         String stringCheckTime = rs.getString("CHECK_TIME");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
         LocalDateTime checkTime = null;
         if (stringCheckTime != null) {
-            checkTime = LocalDateTime.parse(rs.getString("CHECK_TIME"));
+            checkTime = LocalDateTime.parse(rs.getString("CHECK_TIME"), formatter);
         }
         return new TodayCommitModel(pk, githubMemberPk, checkDay, recentlyPushedRepoName, done, checkTime);
     }

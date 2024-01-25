@@ -36,6 +36,6 @@ Content-Type: application/json
 {
   "jobName" : "commit.check.job",
   "jobParameters" : {
-    "date" : "2024-01-29"
+    "date" : "2024-01-30"
   }
 }

@@ -34,7 +34,7 @@ public class CommitCheckJob  {
     public Job job() {
         return jobBuilderFactory.get("commit.check.job")
                 .start(step())
-                .incrementer(new RunIdIncrementer())
+                .incrementer(new ComplexIncrementer())
                 .build();
     }
 

@@ -9,6 +9,7 @@ import java.util.Properties;
 
 @Getter
 public class JobLauncherRequest {
+
     private String jobName;
     private Properties jobParameters;
 
@@ -22,7 +23,13 @@ public class JobLauncherRequest {
 
         properties.putAll(this.jobParameters);
 
-        return new JobParametersBuilder(properties)
+        String id = properties.get("id").toString();
+
+        if (id.isEmpty() || id.isBlank()) {
+            throw new IllegalArgumentException("id 잡을 식별하는 필수 값입니다.");
+        }
+
+        return new JobParametersBuilder(properties).addString("id", id, true)
                 .toJobParameters();
     }
 }
