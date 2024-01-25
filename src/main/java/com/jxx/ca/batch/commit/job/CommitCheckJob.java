@@ -11,6 +11,7 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
@@ -33,13 +34,14 @@ public class CommitCheckJob  {
     public Job job() {
         return jobBuilderFactory.get("commit.check.job")
                 .start(step())
+                .incrementer(new RunIdIncrementer())
                 .build();
     }
 
     @Bean(name = "commit.check.step1")
     public Step step() {
         return stepBuilderFactory.get("commit.check.step1")
-                .<TodayCommitModel, String>chunk(10)
+                .<TodayCommitModel, TodayCommitModel>chunk(10)
                 .reader(reader())
                 .writer(writer())
                 .build();
@@ -53,7 +55,7 @@ public class CommitCheckJob  {
 
     @Bean
     @StepScope
-    public ItemWriter<String> writer() {
+    public ItemWriter<TodayCommitModel> writer() {
         return items -> {
             items.forEach(item -> log.info("item {}", item));
         };

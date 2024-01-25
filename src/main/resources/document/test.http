@@ -27,3 +27,15 @@ GET http://localhost:8080/check-commit?since=2024-01-24T15:00:00Z
 POST https://bizmsg-web.kakaoenterprise.com/v1/oauth/token
 Content-Type: application/x-www-form-urlencoded
 Authorization:
+
+
+### 배치 실행
+POST http://localhost:8080/batch/run
+Content-Type: application/json
+
+{
+  "jobName" : "commit.check.job",
+  "jobParameters" : {
+    "date" : "2024-01-29"
+  }
+}

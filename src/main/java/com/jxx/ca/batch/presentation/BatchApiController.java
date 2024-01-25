@@ -24,15 +24,12 @@ public class BatchApiController {
     public ResponseEntity runJob(@RequestBody JobLauncherRequest request) throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         Job job = context.getBean(request.getJobName(), Job.class);
 
-        ExitStatus exitStatus = jobLauncher.run(job, request.getJobParameters()).getExitStatus();
+        JobParameters jobParameters = new JobParametersBuilder(request.getJobParameters(), jobExplorer)
+                .getNextJobParameters(job)
+                .toJobParameters();
 
-//        Job job = context.getBean(request.getJobName(), Job.class);
-//        JobParameters jobParameters = new JobParametersBuilder(request.getJobParameters(), jobExplorer)
-//                .getNextJobParameters(job)
-//                .toJobParameters();
-//
-//        ExitStatus exitStatus = jobLauncher.run(job, jobParameters)
-//                .getExitStatus();
+        ExitStatus exitStatus = jobLauncher.run(job, jobParameters)
+                .getExitStatus();
         return ResponseEntity.ok(exitStatus.toString());
     }
 }
