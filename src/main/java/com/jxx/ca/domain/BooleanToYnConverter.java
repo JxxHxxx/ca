@@ -1,6 +1,6 @@
 package com.jxx.ca.domain;
 
-import jakarta.persistence.AttributeConverter;
+import javax.persistence.AttributeConverter;
 
 public class BooleanToYnConverter implements AttributeConverter<Boolean, String> {
     @Override
