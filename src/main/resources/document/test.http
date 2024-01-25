@@ -20,6 +20,9 @@ GET http://localhost:8080/users/recently-repo
 ### 특정일 (가장 최근에 PUSH된 Repository만 확인)커밋했는지 확인
 GET http://localhost:8080/check-commit?since=2024-01-23T15:00:00Z
 
+### 특정일 (가장 최근에 PUSH된 Repository만 확인)커밋했는지 확인
+GET http://localhost:8080/check-commit?since=2024-01-24T15:00:00Z
+
 ###
 POST https://bizmsg-web.kakaoenterprise.com/v1/oauth/token
 Content-Type: application/x-www-form-urlencoded

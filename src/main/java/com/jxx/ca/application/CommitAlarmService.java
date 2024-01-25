@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -67,10 +68,10 @@ public class CommitAlarmService {
                     List.class, todayCommit.getGithubMember().getGithubName(), todayCommit.getRecentlyPushedRepoName(), sinceTime);
 
             if (commitHistory.isEmpty()) {
-                todayCommit.setDone(false);
+                todayCommit.checkCommitDone(false);
             }
             else {
-                todayCommit.setDone(true);
+                todayCommit.checkCommitDone(true);
             }
         }
     }
