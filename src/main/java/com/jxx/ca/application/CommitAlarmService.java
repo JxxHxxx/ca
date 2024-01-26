@@ -29,7 +29,21 @@ public class CommitAlarmService {
         githubMemberRepository.save(githubMember);
     }
 
-    // 배치성 작업
+    @Transactional
+    public void enrollMembers(List<UserEnrollForm> forms) {
+        List<GithubMember> githubMembers = forms.stream()
+                .map(form -> new GithubMember(form.githubName()))
+                .toList();
+
+        githubMemberRepository.saveAll(githubMembers);
+    }
+
+    // 배치성 작업 - 여기 로직 잘못됨
+
+    /**
+     * 신규 사용자는 TodayCommit 테이블 레코드가 생성되어야 하고
+     * 그외 사용자는 레코드가 업데이트 되어야 함
+     */
     public void searchRecentlyPushedRepo() {
         List<GithubMember> githubMembers = githubMemberRepository.findAll();
 
@@ -69,8 +83,7 @@ public class CommitAlarmService {
 
             if (commitHistory.isEmpty()) {
                 todayCommit.checkCommitDone(false);
-            }
-            else {
+            } else {
                 todayCommit.checkCommitDone(true);
             }
         }

@@ -1,13 +1,9 @@
 package com.jxx.ca.batch.commit.reader;
 
-
-import com.jxx.ca.domain.TodayCommit;
 import lombok.RequiredArgsConstructor;
-import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 
@@ -16,13 +12,20 @@ import javax.sql.DataSource;
 public class CommitReader {
 
     private final DataSource dataSource;
-    private final RowMapper<TodayCommitModel> rowMapper;
+    private final RowMapper<CommitCheckModel> rowMapper;
+    private static final String READ_SQL =  "SELECT " +
+            "TCM.TODAY_COMMIT_PK , " +
+            "TCM.CHECK_DAY , " +
+            "TCM.CHECK_TIME , " +
+            "TCM.DONE , " +
+            "TCM.RECENTLY_PUSHED_REPO_NAME , " +
+            "JGMM.GITHUB_NAME," +
+            "JGMM.ACTIVE FROM TODAY_COMMIT_MASTER TCM " +
+            "JOIN JXX_GITHUB_MEMBER_MASTER JGMM ON TCM.TODAY_COMMIT_PK = JGMM.GITHUB_MEMBER_PK ";
 
-    private static final String READ_SQL = "SELECT * FROM TODAY_COMMIT_MASTER";
-
-    public JdbcCursorItemReader<TodayCommitModel> build() {
-        return new JdbcCursorItemReaderBuilder<TodayCommitModel>()
-                .name("te")
+    public JdbcCursorItemReader<CommitCheckModel> build() {
+        return new JdbcCursorItemReaderBuilder<CommitCheckModel>()
+                .name("commit.check.step1.reader")
                 .dataSource(dataSource)
                 .sql(READ_SQL) // SQL
                 .rowMapper(rowMapper) // 레코드 -> 객체 변환

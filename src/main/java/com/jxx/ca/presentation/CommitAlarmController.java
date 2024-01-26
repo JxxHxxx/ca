@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -16,6 +18,11 @@ public class CommitAlarmController {
     @PostMapping("/users/enroll")
     public void enrollUser(@RequestBody UserEnrollForm form) {
         commitAlarmService.enrollMember(form);
+    }
+
+    @PostMapping("/users/enrolls")
+    public void enrollUsers(@RequestBody List<UserEnrollForm> form) {
+        commitAlarmService.enrollMembers(form);
     }
 
     // STEP 1

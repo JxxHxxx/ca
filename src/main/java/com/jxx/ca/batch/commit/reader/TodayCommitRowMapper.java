@@ -11,21 +11,27 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
-public class TodayCommitRowMapper implements RowMapper<TodayCommitModel> {
-
+public class TodayCommitRowMapper implements RowMapper<CommitCheckModel> {
     @Override
-    public TodayCommitModel mapRow(ResultSet rs, int rowNum) throws SQLException {
-        long pk = rs.getLong("TODAY_COMMIT_PK");
-        long githubMemberPk = rs.getLong("GITHUB_MEMBER_PK");
+    public CommitCheckModel mapRow(ResultSet rs, int rowNum) throws SQLException {
+        long todayCommitPk = rs.getLong("TODAY_COMMIT_PK");
         LocalDate checkDay = LocalDate.parse(rs.getString("CHECK_DAY"));
         String recentlyPushedRepoName = rs.getString("RECENTLY_PUSHED_REPO_NAME");
+
         Boolean done = "Y".equals(rs.getString("DONE"));
+
         String stringCheckTime = rs.getString("CHECK_TIME");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
+
         LocalDateTime checkTime = null;
         if (stringCheckTime != null) {
             checkTime = LocalDateTime.parse(rs.getString("CHECK_TIME"), formatter);
         }
-        return new TodayCommitModel(pk, githubMemberPk, checkDay, recentlyPushedRepoName, done, checkTime);
+
+        String githubName = rs.getString("GITHUB_NAME");
+        boolean active = rs.getBoolean("ACTIVE");
+
+        return new CommitCheckModel(todayCommitPk, checkDay, checkTime, done, recentlyPushedRepoName,
+                githubName, active);
     }
 }

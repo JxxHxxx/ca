@@ -41,6 +41,16 @@ public class TodayCommit {
     @Column(name = "CHECK_TIME")
     private LocalDateTime checkTime;
 
+    public TodayCommit(Long pk, GithubMember githubMember, LocalDate checkDay, String recentlyPushedRepoName,
+                       Boolean done, LocalDateTime checkTime) {
+        this.pk = pk;
+        this.githubMember = githubMember;
+        this.checkDay = checkDay;
+        this.recentlyPushedRepoName = recentlyPushedRepoName;
+        this.done = done;
+        this.checkTime = checkTime;
+    }
+
     public TodayCommit(GithubMember githubMember, LocalDate checkDay, String recentlyPushedRepoName) {
         this.githubMember = githubMember;
         this.checkDay = checkDay;
