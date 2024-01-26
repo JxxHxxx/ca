@@ -23,11 +23,11 @@ public class JobLauncherRequest {
 
         properties.putAll(this.jobParameters);
 
-        String id = properties.get("id").toString();
-
-        if (id.isEmpty() || id.isBlank()) {
-            throw new IllegalArgumentException("id 잡을 식별하는 필수 값입니다.");
+        Object idProperty = properties.get("id");
+        if (idProperty == null) {
+            throw new IllegalArgumentException("JobParameter id는 잡 식별을 위한 필수 값입니다.");
         }
+        String id = idProperty.toString();
 
         return new JobParametersBuilder(properties).addString("id", id, true)
                 .toJobParameters();
