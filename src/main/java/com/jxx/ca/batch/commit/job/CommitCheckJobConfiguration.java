@@ -6,6 +6,7 @@ import com.jxx.ca.batch.commit.processor.CommitCheckProcessor;
 import com.jxx.ca.batch.commit.reader.CommitReader;
 import com.jxx.ca.batch.commit.reader.CommitCheckModel;
 import com.jxx.ca.batch.commit.writer.CommitCheckWriter;
+import com.jxx.ca.batch.config.IdentifyJobParameterGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -38,7 +39,7 @@ public class CommitCheckJobConfiguration {
     public Job job() {
         return jobBuilderFactory.get("commit.check.job")
                 .start(step())
-                .incrementer(new ComplexIncrementer())
+                .incrementer(new IdentifyJobParameterGenerator())
                 .build();
     }
 

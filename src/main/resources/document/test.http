@@ -45,7 +45,11 @@ Content-Type: application/json
 {
   "jobName" : "commit.check.job",
   "jobParameters" : {
+    "executeSystem":"API",
     "id" : "ADMIN20240126-1",
     "sinceTime" : "2024-01-25T15:00:00Z"
   }
 }
+
+###
+GET http://localhost:8080/api/job-executions/5/step-executions/5

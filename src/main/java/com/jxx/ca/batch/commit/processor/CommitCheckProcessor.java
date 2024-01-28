@@ -4,13 +4,21 @@ import com.jxx.ca.batch.commit.reader.CommitCheckModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.scope.context.StepSynchronizationManager;
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
 
 @Slf4j
-public class CommitCheckProcessor implements ItemProcessor<CommitCheckModel, CommitCheckModel>{
+public class CommitCheckProcessor implements ItemProcessor<CommitCheckModel, CommitCheckModel> {
+
+    @Value("${github.auth-header.token}")
+    private String githubToken;
 
     @Override
     public CommitCheckModel process(CommitCheckModel item) throws Exception {
@@ -18,11 +26,14 @@ public class CommitCheckProcessor implements ItemProcessor<CommitCheckModel, Com
         Map<String, Object> jobParameters = StepSynchronizationManager.getContext().getJobParameters();
         String sinceTime = (String) jobParameters.get("sinceTime");
 
-        List commitHistory = restTemplate.getForObject(
+        HttpEntity<String> entity = setRequestEntity();
+
+        ResponseEntity<List> commitHistoryEntity = restTemplate.exchange(
                 "https://api.github.com/repos/{username}/{reponame}/commits?since={sinceTime}",
-                List.class, item.getGithubName(),
-                item.getRecentlyPushedRepoName(),
-                sinceTime);
+                HttpMethod.GET, entity, List.class,
+                item.getGithubName(), item.getRecentlyPushedRepoName(), sinceTime);
+
+        List commitHistory = commitHistoryEntity.getBody();
 
         if (commitHistory.isEmpty()) {
             item.didntCommit();
@@ -33,5 +44,12 @@ public class CommitCheckProcessor implements ItemProcessor<CommitCheckModel, Com
         log.info("사용자:{} {}일 커밋 여부:{} ", item.getGithubName(), sinceTime, item.getDone());
 
         return item;
+    }
+
+    private HttpEntity<String> setRequestEntity() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.AUTHORIZATION, githubToken);
+        HttpEntity<String> entity = new HttpEntity<String>("", headers);
+        return entity;
     }
 }

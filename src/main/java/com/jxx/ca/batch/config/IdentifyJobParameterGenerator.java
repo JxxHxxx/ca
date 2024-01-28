@@ -1,4 +1,4 @@
-package com.jxx.ca.batch.commit.job;
+package com.jxx.ca.batch.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobParameter;
@@ -10,9 +10,9 @@ import org.springframework.lang.Nullable;
 import java.util.Map;
 
 @Slf4j
-public class ComplexIncrementer implements JobParametersIncrementer {
+public class IdentifyJobParameterGenerator implements JobParametersIncrementer {
 
-    private static String JOB_EXECUTION_KEY = "run.key";
+    private static String JOB_EXECUTION_KEY = "id";
 
     private String key = JOB_EXECUTION_KEY;
 
