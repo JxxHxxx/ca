@@ -35,8 +35,19 @@ Content-Type: application/json
   }
 ]
 
+###
+POST http://localhost:8080/users/enrolls
+Content-Type: application/json
+
+[
+  {"githubName" :  "TheDevLuffy"}
+]
+
 ### 최근 푸시된 레포지토리 생성
 GET http://localhost:8080/users/recently-repo
+
+### 최근 푸시된 레포지토리 생성
+GET http://localhost:8080/commits/renew
 
 ### 사용자 활성화 여부 & 요청일 커밋 여부 확인 배치
 POST http://localhost:8080/batch/run

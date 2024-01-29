@@ -7,6 +7,8 @@ import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 
 @Getter
@@ -31,10 +33,21 @@ public class GithubMember {
     @Comment(value = "사용자 활성화 여부 0=비활성화 1=활성화")
     private Boolean active;
 
+    @OneToOne(mappedBy = "githubMember")
+    private TodayCommit todayCommit;
+
+    public void setTodayCommit(TodayCommit todayCommit) {
+        this.todayCommit = todayCommit;
+    }
+
     public GithubMember(String githubName) {
         this.githubName = githubName;
         createdTime = LocalDateTime.now();
         active = true;
+    }
+
+    public boolean hasTodayCommit() {
+        return todayCommit != null;
     }
 
     public void inactive() {

@@ -1,17 +1,17 @@
 package com.jxx.ca.application;
 
 import com.jxx.ca.domain.GithubMember;
+import com.jxx.ca.domain.RecentlyRepoFindFunction;
+import com.jxx.ca.domain.TodayCommitRenewLauncher;
 import com.jxx.ca.domain.TodayCommit;
 import com.jxx.ca.infra.GithubMemberRepository;
 import com.jxx.ca.infra.TodayCommitRepository;
-import com.jxx.cadto.request.UserEnrollForm;
+import com.jxx.ca.dto.request.UserEnrollForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,13 +46,26 @@ public class CommitAlarmService {
      */
     public void searchRecentlyPushedRepo() {
         List<GithubMember> githubMembers = githubMemberRepository.findAll();
+        // TodayCommit 이 있는지 확인
 
         List<TodayCommit> todayCommits = new ArrayList<>();
         for (GithubMember githubMember : githubMembers) {
             String recentlyRepoName = receiveRecentlyRepoName(githubMember.getGithubName());
-            TodayCommit todayCommit = new TodayCommit(githubMember, LocalDate.now(), recentlyRepoName);
+            TodayCommit todayCommit = new TodayCommit(githubMember, recentlyRepoName);
             todayCommits.add(todayCommit);
         }
+        todayCommitRepository.saveAll(todayCommits);
+    }
+
+    @Transactional
+    public void renewRepoName() {
+        List<GithubMember> githubMembers = githubMemberRepository.findAll();
+
+        TodayCommitRenewLauncher todayCommitRenewLauncher = new TodayCommitRenewLauncher(githubMembers);
+        RecentlyRepoFindFunction repoFindFunction = new RecentlyRepoFindFunction();
+        todayCommitRenewLauncher.renewRepoName(repoFindFunction);
+
+        List<TodayCommit> todayCommits = todayCommitRenewLauncher.enrollRepoName(repoFindFunction);
         todayCommitRepository.saveAll(todayCommits);
     }
 

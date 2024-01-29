@@ -1,7 +1,7 @@
 package com.jxx.ca.presentation;
 
 import com.jxx.ca.application.CommitAlarmService;
-import com.jxx.cadto.request.UserEnrollForm;
+import com.jxx.ca.dto.request.UserEnrollForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +29,11 @@ public class CommitAlarmController {
     @GetMapping("/users/recently-repo")
     public void searchRecentlyPushedRepo() {
         commitAlarmService.searchRecentlyPushedRepo();
+    }
+
+    @GetMapping("/commits/renew")
+    public void renewTodayCommits() {
+        commitAlarmService.renewRepoName();
     }
 
     // STEP 2

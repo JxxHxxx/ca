@@ -1,4 +1,4 @@
-package com.jxx.cadto.request;
+package com.jxx.ca.dto.request;
 
 public record UserEnrollForm(
         String githubName
