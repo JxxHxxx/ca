@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,46 +23,49 @@ public class TodayCommit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TODAY_COMMIT_PK")
+    @Comment("TodayCommit PK")
     private Long pk;
-
     @NotAudited
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GITHUB_MEMBER_PK", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private GithubMember githubMember;
-
-    @Column(name = "CHECK_DAY")
-    private LocalDate checkDay;
+    @Column(name = "RECENT_REPO_CHECK_DAY")
+    @Comment("최근에 업데이트 된 리포짓토리를 탐색한 시간")
+    private LocalDate recentRepoCheckDay;
     @Column(name = "RECENTLY_PUSHED_REPO_NAME")
+    @Comment("최근에 업데이트 된 리포짓토리 이름")
     private String recentlyPushedRepoName;
-
     @Column(name = "DONE")
-    @Comment(value = "1=커밋함 0=커밋안함")
     @Convert(converter = BooleanToYnConverter.class)
+    @Comment(value = "1=커밋함 0=커밋안함")
     private Boolean done;
-    @Column(name = "CHECK_TIME")
-    private LocalDateTime checkTime;
+
+    @Column(name = "COMMIT_DONE_CHECK_TIME")
+    @Comment(value = "커밋 여부 체크 시간")
+    private LocalDateTime commitDoneCheckTime;
 
     public TodayCommit(GithubMember githubMember, String recentlyPushedRepoName) {
         this.githubMember = githubMember;
-        this.checkDay =  LocalDate.now();
+        this.recentRepoCheckDay =  LocalDate.now();
         this.recentlyPushedRepoName = recentlyPushedRepoName;
         this.done = false;
-        this.checkTime = null;
+        this.commitDoneCheckTime = null;
 
         this.githubMember.setTodayCommit(this);
     }
 
     public void checkCommitDone(Boolean done) {
         this.done = done;
-        checkTime = LocalDateTime.now();
+        commitDoneCheckTime = LocalDateTime.now();
     }
 
     public void updateRecentlyPushedRepoName(String recentlyPushedRepoName) {
+        this.recentRepoCheckDay = LocalDate.now();
         this.recentlyPushedRepoName = recentlyPushedRepoName;
     }
 
     public void initialize() {
-        checkDay = LocalDate.now();
+        recentRepoCheckDay = LocalDate.now();
         done = false;
     }
 

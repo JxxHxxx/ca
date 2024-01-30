@@ -25,12 +25,6 @@ public class CommitAlarmController {
         commitAlarmService.enrollMembers(form);
     }
 
-    // STEP 1
-    @GetMapping("/users/recently-repo")
-    public void searchRecentlyPushedRepo() {
-        commitAlarmService.searchRecentlyPushedRepo();
-    }
-
     @GetMapping("/commits/renew")
     public void renewTodayCommits() {
         commitAlarmService.renewRepoName();

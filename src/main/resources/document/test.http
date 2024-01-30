@@ -7,6 +7,12 @@ Content-Type: application/json
     "githubName": "JxxHxxx"
   },
   {
+    "githubName": "TheDevLuffy"
+  },
+  {
+    "githubName": "tkleskrlk2423"
+  },
+  {
     "githubName": "fredlee613"
   },
   {
@@ -34,17 +40,6 @@ Content-Type: application/json
     "githubName": "sirenabada"
   }
 ]
-
-###
-POST http://localhost:8080/users/enrolls
-Content-Type: application/json
-
-[
-  {"githubName" :  "TheDevLuffy"}
-]
-
-### 최근 푸시된 레포지토리 생성
-GET http://localhost:8080/users/recently-repo
 
 ### 최근 푸시된 레포지토리 생성
 GET http://localhost:8080/commits/renew

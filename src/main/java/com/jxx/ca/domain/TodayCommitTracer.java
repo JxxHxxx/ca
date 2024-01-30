@@ -4,15 +4,16 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 
 @Getter
-public class TodayCommitRenewLauncher {
+public class TodayCommitTracer {
 
     private List<GithubMember> existingMembers = new ArrayList<>();
     private List<GithubMember> newMembers = new ArrayList<>();
 
-    public TodayCommitRenewLauncher(List<GithubMember> githubMembers) {
+    public TodayCommitTracer(List<GithubMember> githubMembers) {
         filterMembers(githubMembers);
     }
 
@@ -26,18 +27,23 @@ public class TodayCommitRenewLauncher {
         }
     }
 
-    public List<TodayCommit> enrollRepoName(Function<String, String> function) {
+    public List<TodayCommit> createTodayCommit(Function<String, String> function) {
         return newMembers.stream()
-                .map(newMember -> new TodayCommit(newMember,
-                        function.apply(newMember.getGithubName())))
+                .map(newMember -> {
+                    String repoName = function.apply(newMember.getGithubName());
+                    return repoName == null ? null : new TodayCommit(newMember, repoName);
+                })
+                .filter(Objects::nonNull)
                 .toList();
     }
 
-    public void renewRepoName(Function<String, String> function) {
+    public void renewTodayCommit(Function<String, String> function) {
         existingMembers.forEach(existingMember -> {
             TodayCommit todayCommit = existingMember.getTodayCommit();
             String repoName = function.apply(existingMember.getGithubName());
-            todayCommit.updateRecentlyPushedRepoName(repoName);
+            if (repoName != null) {
+                todayCommit.updateRecentlyPushedRepoName(repoName);
+            }
         });
     }
 }

@@ -1,8 +1,8 @@
 package com.jxx.ca.application;
 
 import com.jxx.ca.domain.GithubMember;
-import com.jxx.ca.domain.RecentlyRepoFindFunction;
-import com.jxx.ca.domain.TodayCommitRenewLauncher;
+import com.jxx.ca.domain.GithubRecentRepoFinderFunction;
+import com.jxx.ca.domain.TodayCommitTracer;
 import com.jxx.ca.domain.TodayCommit;
 import com.jxx.ca.infra.GithubMemberRepository;
 import com.jxx.ca.infra.TodayCommitRepository;
@@ -12,9 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -37,52 +35,19 @@ public class CommitAlarmService {
 
         githubMemberRepository.saveAll(githubMembers);
     }
-
-    // 배치성 작업 - 여기 로직 잘못됨
-
-    /**
-     * 신규 사용자는 TodayCommit 테이블 레코드가 생성되어야 하고
-     * 그외 사용자는 레코드가 업데이트 되어야 함
-     */
-    public void searchRecentlyPushedRepo() {
-        List<GithubMember> githubMembers = githubMemberRepository.findAll();
-        // TodayCommit 이 있는지 확인
-
-        List<TodayCommit> todayCommits = new ArrayList<>();
-        for (GithubMember githubMember : githubMembers) {
-            String recentlyRepoName = receiveRecentlyRepoName(githubMember.getGithubName());
-            TodayCommit todayCommit = new TodayCommit(githubMember, recentlyRepoName);
-            todayCommits.add(todayCommit);
-        }
-        todayCommitRepository.saveAll(todayCommits);
-    }
-
     @Transactional
     public void renewRepoName() {
         List<GithubMember> githubMembers = githubMemberRepository.findAll();
 
-        TodayCommitRenewLauncher todayCommitRenewLauncher = new TodayCommitRenewLauncher(githubMembers);
-        RecentlyRepoFindFunction repoFindFunction = new RecentlyRepoFindFunction();
-        todayCommitRenewLauncher.renewRepoName(repoFindFunction);
+        TodayCommitTracer todayCommitTracer = new TodayCommitTracer(githubMembers);
+        GithubRecentRepoFinderFunction repoFindFunction = new GithubRecentRepoFinderFunction();
 
-        List<TodayCommit> todayCommits = todayCommitRenewLauncher.enrollRepoName(repoFindFunction);
+        // 기존 사용자 repoName update
+        todayCommitTracer.renewTodayCommit(repoFindFunction);
+
+        // 신규 사용자 repoName update
+        List<TodayCommit> todayCommits = todayCommitTracer.createTodayCommit(repoFindFunction);
         todayCommitRepository.saveAll(todayCommits);
-    }
-
-    private String receiveRecentlyRepoName(String githubMemberName) {
-        RestTemplate restTemplate = new RestTemplate();
-        List result = restTemplate.getForObject("https://api.github.com/users/{username}/repos?" +
-                "sort=pushed&page=1&per_page=1", List.class, githubMemberName);
-
-        // 없는 사용자 처리
-
-        // 레포짓토리가 없을 때 처리
-        if (result.isEmpty()) {
-            return null;
-        }
-
-        Map<String, Object> body = (Map<String, Object>) result.get(0);
-        return (String) body.get("name");
     }
 
     @Transactional

@@ -8,7 +8,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 
 
-class TodayCommitRenewLauncherTest {
+class TodayCommitTracerTest {
 
     List<GithubMember> githubMembers;
 
@@ -25,19 +25,19 @@ class TodayCommitRenewLauncherTest {
 
     @Test
     void initialize_today_commit_renew_launcher() {
-        TodayCommitRenewLauncher todayCommitRenewLauncher = new TodayCommitRenewLauncher(githubMembers);
-        List<GithubMember> existingMembers = todayCommitRenewLauncher.getExistingMembers();
+        TodayCommitTracer todayCommitTracer = new TodayCommitTracer(githubMembers);
+        List<GithubMember> existingMembers = todayCommitTracer.getExistingMembers();
         assertThat(existingMembers.size()).isEqualTo(1);
 
-        List<GithubMember> newMembers = todayCommitRenewLauncher.getNewMembers();
+        List<GithubMember> newMembers = todayCommitTracer.getNewMembers();
         assertThat(newMembers.size()).isEqualTo(2);
     }
 
     @Test
     void enroll_repo_name(){
-        TodayCommitRenewLauncher todayCommitRenewLauncher = new TodayCommitRenewLauncher(githubMembers);
+        TodayCommitTracer todayCommitTracer = new TodayCommitTracer(githubMembers);
         //when
-        List<TodayCommit> todayCommits = todayCommitRenewLauncher.enrollRepoName(githubName -> "repo" + githubName);
+        List<TodayCommit> todayCommits = todayCommitTracer.createTodayCommit(githubName -> "repo" + githubName);
 
         List<String> repoNames = todayCommits
                 .stream()
@@ -49,13 +49,13 @@ class TodayCommitRenewLauncherTest {
 
     @Test
     void renew() {
-        TodayCommitRenewLauncher todayCommitRenewLauncher = new TodayCommitRenewLauncher(githubMembers);
-        List<GithubMember> existingMembers = todayCommitRenewLauncher.getExistingMembers();
+        TodayCommitTracer todayCommitTracer = new TodayCommitTracer(githubMembers);
+        List<GithubMember> existingMembers = todayCommitTracer.getExistingMembers();
 
         String legacyRepoName = existingMembers.get(0).getTodayCommit().getRecentlyPushedRepoName();
         assertThat(legacyRepoName).isEqualTo("legacyRepo");
         //when
-        todayCommitRenewLauncher.renewRepoName(githubName -> "renew" + githubName);
+        todayCommitTracer.renewTodayCommit(githubName -> "renew" + githubName);
 
         String renewReoName = existingMembers.get(0).getTodayCommit().getRecentlyPushedRepoName();
         assertThat(renewReoName).isEqualTo("renewxuni");
