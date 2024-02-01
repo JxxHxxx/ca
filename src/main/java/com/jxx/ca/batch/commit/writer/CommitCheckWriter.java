@@ -14,8 +14,8 @@ public class CommitCheckWriter {
     private final DataSource dataSource;
     private final static String WRITE_SQL = "UPDATE " +
             "TODAY_COMMIT_MASTER " +
-            "SET CHECK_DAY=:checkDay, " +
-            "CHECK_TIME=:checkTime, " +
+            "SET RECENT_REPO_CHECK_DAY=:checkDay, " +
+            "COMMIT_DONE_CHECK_TIME=:checkTime, " +
             "DONE=:done, " +
             "RECENTLY_PUSHED_REPO_NAME=:recentlyPushedRepoName " +
             "WHERE TODAY_COMMIT_PK=:todayCommitPk;";

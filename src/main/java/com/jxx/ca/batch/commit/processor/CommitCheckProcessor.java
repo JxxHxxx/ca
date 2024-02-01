@@ -1,6 +1,8 @@
 package com.jxx.ca.batch.commit.processor;
 
 import com.jxx.ca.batch.commit.reader.CommitCheckModel;
+import com.jxx.ca.github.authorization.TokenGenerator;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.scope.context.StepSynchronizationManager;
 import org.springframework.batch.item.ItemProcessor;
@@ -15,10 +17,10 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
+@RequiredArgsConstructor
 public class CommitCheckProcessor implements ItemProcessor<CommitCheckModel, CommitCheckModel> {
 
-    @Value("${github.auth-header.token}")
-    private String githubToken;
+    private final TokenGenerator tokenGenerator;
 
     @Override
     public CommitCheckModel process(CommitCheckModel item) throws Exception {
@@ -48,7 +50,7 @@ public class CommitCheckProcessor implements ItemProcessor<CommitCheckModel, Com
 
     private HttpEntity<String> setRequestEntity() {
         HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.AUTHORIZATION, githubToken);
+        headers.set(HttpHeaders.AUTHORIZATION, tokenGenerator.receive());
         HttpEntity<String> entity = new HttpEntity<String>("", headers);
         return entity;
     }

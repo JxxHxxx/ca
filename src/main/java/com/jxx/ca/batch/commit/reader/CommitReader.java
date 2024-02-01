@@ -15,13 +15,13 @@ public class CommitReader {
     private final RowMapper<CommitCheckModel> rowMapper;
     private static final String READ_SQL =  "SELECT " +
             "TCM.TODAY_COMMIT_PK , " +
-            "TCM.CHECK_DAY , " +
-            "TCM.CHECK_TIME , " +
+            "TCM.RECENT_REPO_CHECK_DAY , " +
+            "TCM.COMMIT_DONE_CHECK_TIME , " +
             "TCM.DONE , " +
             "TCM.RECENTLY_PUSHED_REPO_NAME , " +
             "JGMM.GITHUB_NAME," +
             "JGMM.ACTIVE FROM TODAY_COMMIT_MASTER TCM " +
-            "JOIN JXX_GITHUB_MEMBER_MASTER JGMM ON TCM.TODAY_COMMIT_PK = JGMM.GITHUB_MEMBER_PK ";
+            "JOIN JXX_GITHUB_MEMBER_MASTER JGMM ON TCM.GITHUB_MEMBER_PK = JGMM.GITHUB_MEMBER_PK ";
 
     public JdbcCursorItemReader<CommitCheckModel> build() {
         return new JdbcCursorItemReaderBuilder<CommitCheckModel>()

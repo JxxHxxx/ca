@@ -7,14 +7,19 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * 컬럼 명 변경 시
+ * CommitReader,
+ * CommitCheckWriter,
+ * TodayCommitRowMapper
+ * 클래스 직접 변경해야 함. 유지보수 한 곳에서 할 방법 고안
+ */
 
-@Audited
-@Getter
+@Audited@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "TODAY_COMMIT_MASTER")
@@ -43,6 +48,7 @@ public class TodayCommit {
     @Column(name = "COMMIT_DONE_CHECK_TIME")
     @Comment(value = "커밋 여부 체크 시간")
     private LocalDateTime commitDoneCheckTime;
+
 
     public TodayCommit(GithubMember githubMember, String recentlyPushedRepoName) {
         this.githubMember = githubMember;

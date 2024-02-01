@@ -4,6 +4,7 @@ import com.jxx.ca.domain.GithubMember;
 import com.jxx.ca.domain.GithubRecentRepoFinderFunction;
 import com.jxx.ca.domain.TodayCommitTracer;
 import com.jxx.ca.domain.TodayCommit;
+import com.jxx.ca.github.authorization.TokenGenerator;
 import com.jxx.ca.infra.GithubMemberRepository;
 import com.jxx.ca.infra.TodayCommitRepository;
 import com.jxx.ca.dto.request.UserEnrollForm;
@@ -20,6 +21,7 @@ public class CommitAlarmService {
 
     private final GithubMemberRepository githubMemberRepository;
     private final TodayCommitRepository todayCommitRepository;
+    private final TokenGenerator tokenGenerator;
 
     @Transactional
     public void enrollMember(UserEnrollForm form) {
@@ -40,7 +42,7 @@ public class CommitAlarmService {
         List<GithubMember> githubMembers = githubMemberRepository.findAll();
 
         TodayCommitTracer todayCommitTracer = new TodayCommitTracer(githubMembers);
-        GithubRecentRepoFinderFunction repoFindFunction = new GithubRecentRepoFinderFunction();
+        GithubRecentRepoFinderFunction repoFindFunction = new GithubRecentRepoFinderFunction(tokenGenerator);
 
         // 기존 사용자 repoName update
         todayCommitTracer.renewTodayCommit(repoFindFunction);

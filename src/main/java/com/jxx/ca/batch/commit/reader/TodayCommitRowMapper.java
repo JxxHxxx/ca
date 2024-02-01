@@ -15,17 +15,17 @@ public class TodayCommitRowMapper implements RowMapper<CommitCheckModel> {
     @Override
     public CommitCheckModel mapRow(ResultSet rs, int rowNum) throws SQLException {
         long todayCommitPk = rs.getLong("TODAY_COMMIT_PK");
-        LocalDate checkDay = LocalDate.parse(rs.getString("CHECK_DAY"));
+        LocalDate checkDay = LocalDate.parse(rs.getString("RECENT_REPO_CHECK_DAY"));
         String recentlyPushedRepoName = rs.getString("RECENTLY_PUSHED_REPO_NAME");
 
         Boolean done = "Y".equals(rs.getString("DONE"));
 
-        String stringCheckTime = rs.getString("CHECK_TIME");
+        String stringCheckTime = rs.getString("COMMIT_DONE_CHECK_TIME");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
 
         LocalDateTime checkTime = null;
         if (stringCheckTime != null) {
-            checkTime = LocalDateTime.parse(rs.getString("CHECK_TIME"), formatter);
+            checkTime = LocalDateTime.parse(stringCheckTime, formatter);
         }
 
         String githubName = rs.getString("GITHUB_NAME");
