@@ -1,13 +1,12 @@
 package com.jxx.ca.batch.commit.job;
 
-
 import com.jxx.ca.batch.commit.processor.ActiveValidateProcessor;
 import com.jxx.ca.batch.commit.processor.CommitCheckProcessor;
 import com.jxx.ca.batch.commit.reader.CommitReader;
 import com.jxx.ca.batch.commit.reader.CommitCheckModel;
 import com.jxx.ca.batch.commit.writer.CommitCheckWriter;
 import com.jxx.ca.batch.config.IdentifyJobParameterGenerator;
-import com.jxx.ca.github.authorization.TokenGenerator;
+import com.jxx.ca.github.api.CommitHistoryApiAdapter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -35,7 +34,7 @@ public class CommitCheckJobConfiguration {
     private final RowMapper<CommitCheckModel> rowMapper;
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
-    private final TokenGenerator tokenGenerator;
+    private final CommitHistoryApiAdapter<CommitCheckModel> commitHistoryApiAdapter;
 
     @Bean(name = "commit.check.job")
     public Job job() {
@@ -65,7 +64,7 @@ public class CommitCheckJobConfiguration {
     public CompositeItemProcessor<CommitCheckModel, CommitCheckModel> compositeProcessor() {
         List<ItemProcessor<CommitCheckModel, CommitCheckModel>> delegates = new ArrayList<>();
         delegates.add(new ActiveValidateProcessor());
-        delegates.add(new CommitCheckProcessor(tokenGenerator));
+        delegates.add(new CommitCheckProcessor(commitHistoryApiAdapter));
 
         CompositeItemProcessor<CommitCheckModel, CommitCheckModel> compositeProcessor =
                 new CompositeItemProcessor<>();

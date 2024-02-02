@@ -41,13 +41,16 @@ class CommitReaderTest {
     @BeforeEach
     void init() {
         GithubMember githubMember1 = githubMemberRepository.save(new GithubMember("jxxHxxx"));
-        todayCommitRepository.save(new TodayCommit(githubMember1, "jxxHxxRepo"));
-
         GithubMember githubMember2 = githubMemberRepository.save(new GithubMember("xuni"));
-        todayCommitRepository.save(new TodayCommit(githubMember2, "xuniRepo"));
-
         GithubMember githubMember3 = githubMemberRepository.save(new GithubMember("kaki"));
-        todayCommitRepository.save(new TodayCommit(githubMember3, "kakiRepo"));
+
+        githubMemberRepository.saveAll(List.of(githubMember1, githubMember2, githubMember3));
+
+        todayCommitRepository.saveAll(List.of(
+                new TodayCommit(githubMember1, "jxxHxxRepo"),
+                new TodayCommit(githubMember2, "xuniRepo"),
+                new TodayCommit(githubMember3, "kakiRepo"))
+        );
 
         reader.open(getStepExecution().getExecutionContext()); // read 전에 열어야 됨
     }
