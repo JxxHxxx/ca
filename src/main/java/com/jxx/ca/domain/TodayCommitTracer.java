@@ -1,5 +1,6 @@
 package com.jxx.ca.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -7,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
-@Getter
+@Getter(AccessLevel.PROTECTED) // 외부에서는 GETTER 를 호출하지 마시오
 public class TodayCommitTracer {
 
     private List<GithubMember> existingMembers = new ArrayList<>();
