@@ -41,7 +41,6 @@ public class TodayCommit {
     @Comment("최근에 업데이트 된 리포짓토리 이름")
     private String recentlyPushedRepoName;
     @Column(name = "DONE")
-    @Convert(converter = BooleanToYnConverter.class)
     @Comment(value = "1=커밋함 0=커밋안함")
     private Boolean done;
 

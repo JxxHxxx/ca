@@ -5,11 +5,10 @@ import com.jxx.ca.domain.TodayCommit;
 import com.jxx.ca.infra.GithubMemberRepository;
 import com.jxx.ca.infra.TodayCommitRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.batch.test.MetaDataInstanceFactory;
 import org.springframework.batch.test.context.SpringBatchTest;
@@ -54,6 +53,13 @@ class CommitReaderTest {
 
         reader.open(getStepExecution().getExecutionContext()); // read 전에 열어야 됨
     }
+
+    @AfterEach
+    void afterEach() {
+        githubMemberRepository.deleteAll();
+        todayCommitRepository.deleteAll();
+    }
+
     @Test
     void read() throws Exception {
         List<CommitCheckModel> commitCheckModels = new ArrayList<>();

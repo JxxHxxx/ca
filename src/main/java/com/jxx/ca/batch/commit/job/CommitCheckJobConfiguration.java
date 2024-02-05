@@ -48,14 +48,14 @@ public class CommitCheckJobConfiguration {
     public Step step() {
         return stepBuilderFactory.get("commit.check.step1")
                 .<CommitCheckModel, CommitCheckModel>chunk(3)
-                .reader(reader())
+                .reader(commitCheckReader())
                 .processor(compositeProcessor())
-                .writer(writer())
+                .writer(commitCheckWriter())
                 .build();
     }
     @Bean
     @StepScope
-    public JdbcCursorItemReader<CommitCheckModel> reader() {
+    public JdbcCursorItemReader<CommitCheckModel> commitCheckReader() {
         return new CommitReader(dataSource, rowMapper).build();
     }
 
@@ -76,7 +76,7 @@ public class CommitCheckJobConfiguration {
 
     @Bean
     @StepScope
-    public JdbcBatchItemWriter<CommitCheckModel> writer() {
+    public JdbcBatchItemWriter<CommitCheckModel> commitCheckWriter() {
         return new CommitCheckWriter(dataSource).build();
     }
 }
