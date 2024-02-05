@@ -18,7 +18,6 @@ public class TodayCommitRowMapper implements RowMapper<CommitCheckModel> {
         LocalDate checkDay = LocalDate.parse(rs.getString("RECENT_REPO_CHECK_DAY"));
         String recentlyPushedRepoName = rs.getString("RECENTLY_PUSHED_REPO_NAME");
 
-//        Boolean done = "Y".equals(rs.getString("DONE"));
         boolean done = rs.getBoolean("DONE");
         String stringCheckTime = rs.getString("COMMIT_DONE_CHECK_TIME");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");

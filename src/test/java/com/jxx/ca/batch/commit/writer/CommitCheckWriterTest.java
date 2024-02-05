@@ -14,9 +14,7 @@ import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,13 +30,8 @@ class CommitCheckWriterTest {
     @Autowired
     @Qualifier(value = "commitCheckWriter")
     JdbcBatchItemWriter<CommitCheckModel> itemWriter;
-
-    @Autowired
-    EntityManager entityManager;
-
     @Autowired
     GithubMemberRepository githubMemberRepository;
-
     @Autowired
     TodayCommitRepository todayCommitRepository;
 
@@ -76,9 +69,9 @@ class CommitCheckWriterTest {
                 todayCommit2.getPk(),
                 LocalDate.now(),
                 LocalDateTime.now(),
-                true,
+                false,
                 "newRepo2",
-                "jxxHxxx",
+                "xuni",
                 true);
         // 사전 검증
         assertThat(todayCommit1.getDone()).isFalse();
@@ -88,9 +81,16 @@ class CommitCheckWriterTest {
         //when
         itemWriter.write(List.of(commitCheckModel1, commitCheckModel2));
 
-        TodayCommit updatedTodayCommit = todayCommitRepository.findById(todayCommit1.getPk()).get();
-        assertThat(updatedTodayCommit.getDone()).isTrue();
-        assertThat(updatedTodayCommit.getRecentlyPushedRepoName()).isEqualTo("newRepo1");
-        assertThat(updatedTodayCommit.getCommitDoneCheckTime()).isNotNull();
+        TodayCommit updatedTodayCommit1 = todayCommitRepository.findById(todayCommit1.getPk()).get();
+        assertThat(updatedTodayCommit1.getDone()).isTrue();
+        assertThat(updatedTodayCommit1.getRecentlyPushedRepoName()).isEqualTo("newRepo1");
+        assertThat(updatedTodayCommit1.getCommitDoneCheckTime()).isNotNull();
+
+        TodayCommit updatedTodayCommit2 = todayCommitRepository.findById(todayCommit2.getPk()).get();
+        assertThat(updatedTodayCommit2.getDone()).isFalse();
+        assertThat(updatedTodayCommit2.getRecentlyPushedRepoName()).isEqualTo("newRepo2");
+        assertThat(updatedTodayCommit2.getCommitDoneCheckTime()).isNotNull();
+
+
     }
 }
