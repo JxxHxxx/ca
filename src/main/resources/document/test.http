@@ -1,61 +1,26 @@
-### 사용자 추가1
-POST http://localhost:8080/users/enrolls
+### 사용자 등록
+POST http://localhost:8080/users
 Content-Type: application/json
 
 [
-  {
-    "githubName": "JxxHxxx"
-  },
-  {
-    "githubName": "TheDevLuffy"
-  },
-  {
-    "githubName": "tkleskrlk2423"
-  },
-  {
-    "githubName": "fredlee613"
-  },
-  {
-    "githubName": "hyunjunhwang1994"
-  },
-  {
-    "githubName": "dong-fa"
-  },
-  {
-    "githubName": "AngelaChaejung"
-  },
-  {
-    "githubName": "rylynntruth"
-  },
-  {
-    "githubName": "hwi3721"
-  },
-  {
-    "githubName": "HYEchive"
-  },
-  {
-    "githubName": "Choboza"
-  },
-  {
-    "githubName": "sirenabada"
-  }
+  {"githubName": "JxxHxxx"}, {"githubName": "TheDevLuffy"}, {"githubName": "tkleskrlk2423"}, {"githubName": "fredlee613"},
+  {"githubName": "hyunjunhwang1994"}, {"githubName": "dong-fa"}, {"githubName": "AngelaChaejung"}, {"githubName": "rylynntruth"},
+  {"githubName": "hwi3721"}, {"githubName": "HYEchive"}, {"githubName": "Choboza"}, {"githubName": "sirenabada"},
+  {"githubName": "rickiepark"}
 ]
 
-### 최근 푸시된 레포지토리 생성
-GET http://localhost:8080/commits/renew
+### 최근 푸시된 레포지토리 정보 생성/갱신
+PATCH http://localhost:8080/commits/renew-repo-name
 
 ### 사용자 활성화 여부 & 요청일 커밋 여부 확인 배치
 POST http://localhost:8080/batch/run
 Content-Type: application/json
 
 {
-  "jobName" : "commit.check.job",
+  "jobName" : "commit-check.job",
   "jobParameters" : {
     "executeSystem":"API",
-    "id" : "ADMIN20240205-5",
-    "sinceTime" : "2024-02-04T15:00:00Z"
+    "id" : "ADMIN20240215-11",
+    "sinceTime" : "2024-02-14T15:00:00Z"
   }
 }
-
-###
-GET http://localhost:8080/api/job-executions/5/step-executions/5
