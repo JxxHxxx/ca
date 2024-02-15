@@ -1,14 +1,20 @@
 package com.jxx.ca.batch.commit.job;
 
+import com.jxx.ca.batch.commit.processor.ActiveMemberProcessor;
 import com.jxx.ca.batch.commit.processor.ActiveValidateProcessor;
 import com.jxx.ca.batch.commit.processor.CommitCheckProcessor;
+import com.jxx.ca.batch.commit.processor.RenewRepoProcessor;
 import com.jxx.ca.batch.commit.reader.CommitReader;
-import com.jxx.ca.batch.commit.reader.CommitCheckModel;
+import com.jxx.ca.batch.commit.model.CommitCheckModel;
+import com.jxx.ca.batch.commit.model.RenewRepoModel;
+import com.jxx.ca.batch.commit.reader.RenewRepoReader;
 import com.jxx.ca.batch.commit.writer.CommitCheckWriter;
+import com.jxx.ca.batch.commit.writer.RenewRepoWriter;
 import com.jxx.ca.batch.config.IdentifyJobParameterGenerator;
 import com.jxx.ca.github.api.CommitHistoryApiAdapter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -17,6 +23,7 @@ import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
+import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.support.CompositeItemProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,27 +39,67 @@ import java.util.List;
 public class CommitCheckJobConfiguration {
     private final DataSource dataSource;
     private final RowMapper<CommitCheckModel> rowMapper;
+    private final RowMapper<RenewRepoModel> renewRepoModelRowMapper;
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final CommitHistoryApiAdapter<CommitCheckModel> commitHistoryApiAdapter;
 
-    @Bean(name = "commit.check.job")
-    public Job job() {
-        return jobBuilderFactory.get("commit.check.job")
-                .start(step())
+    @Bean(name = "commit-check.job")
+    public Job commitCheckJob() {
+        return jobBuilderFactory.get("commit-check.job")
+                .start(renewRepoStep()).on(ExitStatus.COMPLETED.getExitCode()).to(commitCheckStep())
+                .end()
                 .incrementer(new IdentifyJobParameterGenerator())
                 .build();
     }
 
-    @Bean(name = "commit.check.step1")
-    public Step step() {
-        return stepBuilderFactory.get("commit.check.step1")
-                .<CommitCheckModel, CommitCheckModel>chunk(3)
+    @Bean(name = "commit-check.step1.renew-repo")
+    public Step renewRepoStep() {
+        return stepBuilderFactory.get("commit-check.step1.renew-repo")
+                .<RenewRepoModel, RenewRepoModel>chunk(10)
+                .reader(renewRepoReader())
+                .processor(renewRepoProcessors())
+                .writer(renewRepoWriter())
+                .build();
+    }
+
+    @Bean
+    @StepScope
+    public JdbcCursorItemReader<RenewRepoModel> renewRepoReader() {
+        return new RenewRepoReader(dataSource, renewRepoModelRowMapper).build();
+    };
+
+    @Bean
+    @StepScope
+    public CompositeItemProcessor<RenewRepoModel, RenewRepoModel> renewRepoProcessors() {
+        List<ItemProcessor<RenewRepoModel, RenewRepoModel>> delegates = new ArrayList<>();
+        delegates.add(new ActiveMemberProcessor());
+        delegates.add(new RenewRepoProcessor());
+
+        CompositeItemProcessor<RenewRepoModel, RenewRepoModel> compositeProcessor =
+                new CompositeItemProcessor<>();
+
+        compositeProcessor.setDelegates(delegates);
+        return compositeProcessor;
+    }
+
+    @Bean
+    @StepScope
+    public JdbcBatchItemWriter<RenewRepoModel> renewRepoWriter() {
+        return new RenewRepoWriter(dataSource).build();
+    }
+
+
+    @Bean(name = "commit-check.step2.commit-check")
+    public Step commitCheckStep() {
+        return stepBuilderFactory.get("commit-check.step2.commit-check")
+                .<CommitCheckModel, CommitCheckModel>chunk(10)
                 .reader(commitCheckReader())
-                .processor(compositeProcessor())
+                .processor(commitCheckProcessors())
                 .writer(commitCheckWriter())
                 .build();
     }
+
     @Bean
     @StepScope
     public JdbcCursorItemReader<CommitCheckModel> commitCheckReader() {
@@ -61,7 +108,7 @@ public class CommitCheckJobConfiguration {
 
     @Bean
     @StepScope
-    public CompositeItemProcessor<CommitCheckModel, CommitCheckModel> compositeProcessor() {
+    public CompositeItemProcessor<CommitCheckModel, CommitCheckModel> commitCheckProcessors() {
         List<ItemProcessor<CommitCheckModel, CommitCheckModel>> delegates = new ArrayList<>();
         delegates.add(new ActiveValidateProcessor());
         delegates.add(new CommitCheckProcessor(commitHistoryApiAdapter));

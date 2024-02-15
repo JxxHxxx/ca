@@ -19,7 +19,8 @@ import java.time.LocalDateTime;
  * 클래스 직접 변경해야 함. 유지보수 한 곳에서 할 방법 고안
  */
 
-@Audited@Getter
+@Audited
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "TODAY_COMMIT_MASTER")
@@ -67,6 +68,10 @@ public class TodayCommit {
     public void updateRecentlyPushedRepoName(String recentlyPushedRepoName) {
         this.recentRepoCheckDay = LocalDate.now();
         this.recentlyPushedRepoName = recentlyPushedRepoName;
+    }
+
+    public boolean isSameRecentlyPushedRepoName(String renewRepoName) {
+        return recentlyPushedRepoName.equals(renewRepoName);
     }
 
     public void initialize() {

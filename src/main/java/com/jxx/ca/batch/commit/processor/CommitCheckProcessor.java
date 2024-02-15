@@ -1,12 +1,11 @@
 package com.jxx.ca.batch.commit.processor;
 
-import com.jxx.ca.batch.commit.reader.CommitCheckModel;
+import com.jxx.ca.batch.commit.model.CommitCheckModel;
 import com.jxx.ca.github.api.CommitHistoryApiAdapter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.scope.context.StepSynchronizationManager;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;

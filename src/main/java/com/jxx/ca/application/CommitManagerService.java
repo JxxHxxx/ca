@@ -17,17 +17,11 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CommitAlarmService {
+public class CommitManagerService {
 
     private final GithubMemberRepository githubMemberRepository;
     private final TodayCommitRepository todayCommitRepository;
     private final TokenGenerator tokenGenerator;
-
-    @Transactional
-    public void enrollMember(UserEnrollForm form) {
-        GithubMember githubMember = new GithubMember(form.githubName());
-        githubMemberRepository.save(githubMember);
-    }
 
     @Transactional
     public void enrollMembers(List<UserEnrollForm> forms) {
@@ -35,16 +29,21 @@ public class CommitAlarmService {
                 .map(form -> new GithubMember(form.githubName()))
                 .toList();
 
-        githubMemberRepository.saveAll(githubMembers);
+        List<GithubMember> savedGithubMembers = githubMemberRepository.saveAll(githubMembers);
+
+        TodayCommitTracer todayCommitTracer = new TodayCommitTracer(savedGithubMembers);
+
+        List<TodayCommit> todayCommits = todayCommitTracer.createTodayCommit(new GithubRecentRepoFinderFunction(tokenGenerator));
+        todayCommitRepository.saveAll(todayCommits);
     }
     @Transactional
-    public void renewRepoName() {
+    public void renewRepoNameAllUsers() {
         List<GithubMember> githubMembers = githubMemberRepository.findAll();
 
         TodayCommitTracer todayCommitTracer = new TodayCommitTracer(githubMembers);
         GithubRecentRepoFinderFunction repoFindFunction = new GithubRecentRepoFinderFunction(tokenGenerator);
 
-        // 기존 사용자 repoName update
+        // 기존 사용자 repoName update - dirty checking
         todayCommitTracer.renewTodayCommit(repoFindFunction);
 
         // 신규 사용자 repoName update

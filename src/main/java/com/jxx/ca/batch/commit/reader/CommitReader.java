@@ -1,5 +1,6 @@
 package com.jxx.ca.batch.commit.reader;
 
+import com.jxx.ca.batch.commit.model.CommitCheckModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
@@ -25,7 +26,7 @@ public class CommitReader {
 
     public JdbcCursorItemReader<CommitCheckModel> build() {
         return new JdbcCursorItemReaderBuilder<CommitCheckModel>()
-                .name("commit.check.step1.reader")
+                .name("commit-check.step2.reader")
                 .dataSource(dataSource)
                 .sql(READ_SQL) // SQL
                 .rowMapper(rowMapper) // 레코드 -> 객체 변환

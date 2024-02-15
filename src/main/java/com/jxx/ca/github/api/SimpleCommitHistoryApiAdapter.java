@@ -1,6 +1,6 @@
 package com.jxx.ca.github.api;
 
-import com.jxx.ca.batch.commit.reader.CommitCheckModel;
+import com.jxx.ca.batch.commit.model.CommitCheckModel;
 import com.jxx.ca.github.authorization.TokenGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;

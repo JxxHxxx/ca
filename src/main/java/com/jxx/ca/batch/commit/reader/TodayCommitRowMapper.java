@@ -1,6 +1,6 @@
 package com.jxx.ca.batch.commit.reader;
 
-import com.jxx.ca.domain.TodayCommit;
+import com.jxx.ca.batch.commit.model.CommitCheckModel;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 

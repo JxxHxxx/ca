@@ -1,6 +1,6 @@
 package com.jxx.ca.batch.commit.processor;
 
-import com.jxx.ca.batch.commit.reader.CommitCheckModel;
+import com.jxx.ca.batch.commit.model.CommitCheckModel;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
 package com.jxx.ca.batch.commit.writer;
 
-import com.jxx.ca.batch.commit.reader.CommitCheckModel;
+import com.jxx.ca.batch.commit.model.CommitCheckModel;
 import com.jxx.ca.domain.GithubMember;
 import com.jxx.ca.domain.TodayCommit;
 import com.jxx.ca.infra.GithubMemberRepository;

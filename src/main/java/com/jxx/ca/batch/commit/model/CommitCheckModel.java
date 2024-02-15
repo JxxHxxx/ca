@@ -1,4 +1,4 @@
-package com.jxx.ca.batch.commit.reader;
+package com.jxx.ca.batch.commit.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
