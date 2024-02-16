@@ -20,15 +20,12 @@ public class CommitCheckModel {
     private final String githubName;
     private final Boolean active;
 
-    public void didCommit(){
-        done = true;
+    public void checkCommitDone(Boolean done) {
+        this.done = done;
         checkTime = LocalDateTime.now();
     }
 
-    public void didntCommit() {
-        done = false;
-        checkTime = LocalDateTime.now();
-    }
+
 
     public boolean isActiveMember() {
         return active;

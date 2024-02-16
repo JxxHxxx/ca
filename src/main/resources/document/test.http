@@ -18,7 +18,7 @@ Content-Type: application/json
   "jobParameters" : {
     "executeSystem":"API",
     "id" : "ADMIN20240215-14",
-    "sinceTime" : "2024-02-14T15:00:00Z"
+    "sinceTime" : "2024-02-16T00:00Z"
   }
 }
 

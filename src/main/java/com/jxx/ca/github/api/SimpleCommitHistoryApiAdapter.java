@@ -1,6 +1,5 @@
 package com.jxx.ca.github.api;
 
-import com.jxx.ca.batch.commit.model.CommitCheckModel;
 import com.jxx.ca.github.authorization.TokenGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -14,20 +13,16 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class SimpleCommitHistoryApiAdapter implements CommitHistoryApiAdapter<CommitCheckModel> {
-
+public class SimpleCommitHistoryApiAdapter implements CommitHistoryApiAdapter {
     private final TokenGenerator tokenGenerator;
 
     @Override
-    public List body(CommitCheckModel commitCheckModel, String sinceTime) {
-
-        HttpEntity<String> entity = setRequestEntity();
-
+    public List getResponseBody(String username, String repoName, String sinceTime) {
         RestTemplate restTemplate = new RestTemplate();
+
         ResponseEntity<List> commitHistoryEntity = restTemplate.exchange(
                 "https://api.github.com/repos/{username}/{reponame}/commits?since={sinceTime}",
-                HttpMethod.GET, entity, List.class,
-                commitCheckModel.getGithubName(), commitCheckModel.getRecentlyPushedRepoName(), sinceTime);
+                HttpMethod.GET, setRequestEntity(), List.class, username, repoName, sinceTime);
 
         return commitHistoryEntity.getBody();
     }

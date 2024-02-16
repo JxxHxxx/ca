@@ -42,7 +42,7 @@ public class CommitCheckJobConfiguration {
     private final RowMapper<RenewRepoModel> renewRepoModelRowMapper;
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
-    private final CommitHistoryApiAdapter<CommitCheckModel> commitHistoryApiAdapter;
+    private final CommitHistoryApiAdapter commitHistoryApiAdapter;
 
     @Bean(name = "commit-check.job")
     public Job commitCheckJob() {

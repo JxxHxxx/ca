@@ -21,15 +21,13 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBatchTest
 class CommitCheckProcessorTest {
 
-    CommitHistoryApiAdapter<CommitCheckModel> commitHistoryApiAdapter;
+    CommitHistoryApiAdapter commitHistoryApiAdapter;
     CommitCheckProcessor commitCheckProcessor;;
 
     @BeforeEach
     void given() {
         // githubName 이 jxxHxxx 이면 빈 리스트, 비어있지 않은 리스트를 반환한다.
-        commitHistoryApiAdapter = (commitCheckModel, sinceTime) ->
-                commitCheckModel.getGithubName().equals("jxxHxxx") ? List.of() : List.of(commitCheckModel);
-
+        commitHistoryApiAdapter = (username, reponame, sinceTime) -> "jxxHxxx".equals(username) ? List.of() : List.of(username);
         commitCheckProcessor = new CommitCheckProcessor(commitHistoryApiAdapter);
     }
 

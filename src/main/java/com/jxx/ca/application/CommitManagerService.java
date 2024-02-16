@@ -4,6 +4,7 @@ import com.jxx.ca.domain.GithubMember;
 import com.jxx.ca.domain.GithubRecentRepoFinderFunction;
 import com.jxx.ca.domain.TodayCommitTracer;
 import com.jxx.ca.domain.TodayCommit;
+import com.jxx.ca.github.api.CommitHistoryApiAdapter;
 import com.jxx.ca.github.authorization.TokenGenerator;
 import com.jxx.ca.infra.GithubMemberRepository;
 import com.jxx.ca.infra.TodayCommitRepository;
@@ -11,7 +12,6 @@ import com.jxx.ca.dto.request.UserEnrollForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -21,6 +21,7 @@ public class CommitManagerService {
 
     private final GithubMemberRepository githubMemberRepository;
     private final TodayCommitRepository todayCommitRepository;
+    private final CommitHistoryApiAdapter commitHistoryApiAdapter;
     private final TokenGenerator tokenGenerator;
 
     @Transactional
@@ -50,15 +51,13 @@ public class CommitManagerService {
         List<TodayCommit> todayCommits = todayCommitTracer.createTodayCommit(repoFindFunction);
         todayCommitRepository.saveAll(todayCommits);
     }
-
     @Transactional
-    public void checkTodayCommit(final String sinceTime) {
-        RestTemplate restTemplate = new RestTemplate();
+    public void checkTodayCommit(String sinceTime) {
         List<TodayCommit> todayCommits = todayCommitRepository.findAll();
+
         for (TodayCommit todayCommit : todayCommits) {
-            List commitHistory = restTemplate.getForObject(
-                    "https://api.github.com/repos/{username}/{reponame}/commits?since={sinceTime}",
-                    List.class, todayCommit.getGithubMember().getGithubName(), todayCommit.getRecentlyPushedRepoName(), sinceTime);
+            List commitHistory = commitHistoryApiAdapter.getResponseBody(todayCommit.getGithubMember().getGithubName(),
+                    todayCommit.getRecentlyPushedRepoName(), sinceTime);
 
             if (commitHistory.isEmpty()) {
                 todayCommit.checkCommitDone(false);
