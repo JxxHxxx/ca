@@ -19,20 +19,12 @@ public class RenewRepoProcessor implements ItemProcessor<RenewRepoModel, RenewRe
         GithubRecentRepoFinderFunction function = new GithubRecentRepoFinderFunction(tokenGenerator);
         String renewRepoName = function.apply(item.getGithubName());
 
-        // repoName 을 못 찾았을 경우 null , 기존과 동일한 경우 null, 새롭게 갱신된 경우에만 item return
         if (Objects.isNull(renewRepoName)) {
             log.info("사용자:{} 리포짓토리 이름을 찾을 수 없습니다. write 대상이 아닙니다.", item.getGithubName());
             return null;
         }
 
-        if (item.isSameRecentlyPushedRepoName(renewRepoName)) {
-            log.info("사용자:{} renewRepoName:{} RecentlyPushedRepoName:{} write 대상이 아닙니다.",
-                    item.getGithubName(), renewRepoName, item.getRecentlyPushedRepoName());
-            return null;
-        }
-
-        log.info("사용자:{} renewRepoName:{} RecentlyPushedRepoName:{} write 대상입니다.",
-                item.getGithubName(), renewRepoName, item.getRecentlyPushedRepoName());
+        log.info("사용자:{} 갱신된 레포짓토리 명:{}", item.getGithubName(), renewRepoName);
         item.renewRepoName(renewRepoName);
         return item;
     }
