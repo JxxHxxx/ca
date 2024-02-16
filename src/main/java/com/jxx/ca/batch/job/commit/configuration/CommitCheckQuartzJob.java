@@ -12,31 +12,35 @@ import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
 public class CommitCheckQuartzJob extends QuartzJobBean {
 
-    @Qualifier(value = "commit.check.job")
+    @Qualifier(value = "commit-check.job")
     private final Job job;
     private final JobExplorer jobExplorer;
     private final JobLauncher jobLauncher;
 
+    private static final String SINCE_TIME_SUFFIX_VALUE = "T00:00:00Z";
+
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
-        log.info("call quartz job");
+        log.info("execute commit-check.job");
+        String sinceTime = LocalDate.now() + SINCE_TIME_SUFFIX_VALUE;
+
         JobParameters jobParameters = new JobParametersBuilder(this.jobExplorer)
                 .addString("id", UUID.randomUUID().toString(), true)
                 .addString("executeSystem", "Quartz")
-                .getNextJobParameters(this.job)
+                .addString("sinceTime", sinceTime)
                 .toJobParameters();
 
         try {
             jobLauncher.run(job, jobParameters);
         } catch (Exception e) {
             log.error("", e);
-
         }
     }
 }

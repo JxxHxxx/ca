@@ -4,6 +4,8 @@ import com.jxx.ca.domain.GithubMember;
 import com.jxx.ca.domain.GithubRecentRepoFinderFunction;
 import com.jxx.ca.domain.TodayCommitTracer;
 import com.jxx.ca.domain.TodayCommit;
+import com.jxx.ca.dto.response.TodayCommitInformation;
+import com.jxx.ca.dto.response.TodayCommitResponse;
 import com.jxx.ca.github.api.CommitHistoryApiAdapter;
 import com.jxx.ca.github.authorization.TokenGenerator;
 import com.jxx.ca.infra.GithubMemberRepository;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -73,4 +76,28 @@ public class CommitManagerService {
     }
 
 
+    public List<TodayCommitResponse> findTodayCommits() {
+        List<TodayCommit> todayCommits = todayCommitRepository.findAll();
+
+        return todayCommits.stream()
+                .map(todayCommit -> {
+                    String done = todayCommit.getDone() ? "O" : "X";
+                    return new TodayCommitResponse(todayCommit.getGithubMember().getGithubName(), done);
+                })
+                .toList();
+    }
+
+    public List<TodayCommitResponse> findTodayCommit(String namePattern) {
+        if (Objects.isNull(namePattern) || namePattern.isBlank()) {
+            return findTodayCommits();
+        }
+        List<TodayCommitInformation> informations = todayCommitRepository.receiveTodayCommitInfoByGithubName(namePattern);
+
+        return informations.stream()
+                .map(info -> {
+                    String done = info.isDone() ? "O" : "X";
+                    return new TodayCommitResponse(info.getGithubName(), done);
+                })
+                .toList();
+    }
 }

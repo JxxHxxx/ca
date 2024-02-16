@@ -34,7 +34,7 @@ public class SimpleCommitHistoryApiAdapter implements CommitHistoryApiAdapter {
      * github api server 는 UTC 타임존을 따르기 때문에 한국의 경우 -9시간을 해야 적절하다.
      * 아래 private 메서드는 이를 조절해주는 기능이다.
      * /api.github.com/repos/{username}/{reponame}/commits?since={sinceTime}
-     * sinceTime = 2024-02-16T00:00Z -> 2024-02-15T15:00Z 로 변경된다.
+     * sinceTime = 2024-02-16T00:00:00Z -> 2024-02-15T15:00Z 로 변경된다.
      */
     protected String adjustSinceTime(String sinceTime) {
         Instant instant = Instant.parse(sinceTime);

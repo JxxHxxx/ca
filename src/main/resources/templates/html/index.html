@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>커밋 했니?</title>
+    <link rel="stylesheet" href="../css/table.css">
+    <link rel="stylesheet" href="../css/footer.css">
+
+</head>
+<body>
+  <header>
+    <h1 class="title1"></h1>
+  </header>
+  <nav></nav>
+  <main>
+
+      <div>
+          <form>
+              깃헙 닉네임 : <input id="github-nickname" type="text"/>
+              <button class="github-nickname-search" type="button">검색</button>
+          </form>
+      <div>
+
+    <table class="table-container">
+      <thead>
+        <tr>
+          <td>깃헙 닉네임</td>
+          <td>커밋 여부</td>
+        </tr>
+      </thead>
+      <tbody class="commit-history-table-row">
+      </tbody>
+    </table>
+
+  </main>
+  <footer>
+      <p>1. private 레포의 경우 커밋 내역 반영 X</p>
+      <p>2. 커밋 여부는 1시간 마다 동기화</p>
+  </footer>
+</body>
+<script src="../script/init.js"></script>
+<script src="../script/search.js"></script>
+</html>

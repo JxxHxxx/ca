@@ -17,11 +17,10 @@ Content-Type: application/json
   "jobName" : "commit-check.job",
   "jobParameters" : {
     "executeSystem":"API",
-    "id" : "ADMIN20240215-14",
-    "sinceTime" : "2024-02-16T00:00Z"
+    "id" : "ADMIN20240216-02",
+    "sinceTime" : "2024-02-16T00:00:00Z"
   }
 }
-
 
 ### 최근 푸시된 레포지토리 정보 생성/갱신
 PATCH http://localhost:8080/commits/renew-repo-name
