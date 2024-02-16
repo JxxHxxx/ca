@@ -1,6 +1,6 @@
-package com.jxx.ca.batch.commit.reader;
+package com.jxx.ca.batch.job.commit.reader;
 
-import com.jxx.ca.batch.commit.model.RenewRepoModel;
+import com.jxx.ca.batch.job.commit.model.RenewRepoModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;

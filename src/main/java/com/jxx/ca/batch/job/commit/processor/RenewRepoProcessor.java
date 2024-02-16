@@ -1,6 +1,6 @@
-package com.jxx.ca.batch.commit.processor;
+package com.jxx.ca.batch.job.commit.processor;
 
-import com.jxx.ca.batch.commit.model.RenewRepoModel;
+import com.jxx.ca.batch.job.commit.model.RenewRepoModel;
 import com.jxx.ca.domain.GithubRecentRepoFinderFunction;
 import com.jxx.ca.github.authorization.GithubTokenGenerator;
 import com.jxx.ca.github.authorization.TokenGenerator;

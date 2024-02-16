@@ -1,4 +1,4 @@
-package com.jxx.ca.batch.commit.model;
+package com.jxx.ca.batch.job.commit.model;
 
 
 import lombok.Getter;

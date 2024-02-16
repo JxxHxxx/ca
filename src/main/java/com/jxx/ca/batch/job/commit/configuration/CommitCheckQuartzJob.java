@@ -1,4 +1,4 @@
-package com.jxx.ca.batch.commit.job;
+package com.jxx.ca.batch.job.commit.configuration;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

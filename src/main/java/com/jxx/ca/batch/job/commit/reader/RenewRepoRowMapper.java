@@ -1,6 +1,6 @@
-package com.jxx.ca.batch.commit.reader;
+package com.jxx.ca.batch.job.commit.reader;
 
-import com.jxx.ca.batch.commit.model.RenewRepoModel;
+import com.jxx.ca.batch.job.commit.model.RenewRepoModel;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 

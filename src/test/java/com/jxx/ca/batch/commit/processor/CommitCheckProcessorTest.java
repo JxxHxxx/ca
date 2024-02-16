@@ -1,7 +1,8 @@
 package com.jxx.ca.batch.commit.processor;
 
 
-import com.jxx.ca.batch.commit.model.CommitCheckModel;
+import com.jxx.ca.batch.job.commit.model.CommitCheckModel;
+import com.jxx.ca.batch.job.commit.processor.CommitCheckProcessor;
 import com.jxx.ca.github.api.CommitHistoryApiAdapter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
