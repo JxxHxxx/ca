@@ -58,7 +58,6 @@ class CommitCheckWriterTest {
         //given
         CommitCheckModel commitCheckModel1 = new CommitCheckModel(
                 todayCommit1.getPk(),
-                LocalDate.now(),
                 LocalDateTime.now(),
                 true,
                 "newRepo1",
@@ -67,7 +66,6 @@ class CommitCheckWriterTest {
 
         CommitCheckModel commitCheckModel2 = new CommitCheckModel(
                 todayCommit2.getPk(),
-                LocalDate.now(),
                 LocalDateTime.now(),
                 false,
                 "newRepo2",
@@ -76,7 +74,7 @@ class CommitCheckWriterTest {
         // 사전 검증
         assertThat(todayCommit1.getDone()).isFalse();
         assertThat(todayCommit1.getRecentlyPushedRepoName()).isEqualTo("legacyRepo1");
-        assertThat(todayCommit1.getCommitDoneCheckTime()).isNull();
+        assertThat(todayCommit1.getDoneCheckTime()).isNull();
 
         //when
         itemWriter.write(List.of(commitCheckModel1, commitCheckModel2));
@@ -84,12 +82,12 @@ class CommitCheckWriterTest {
         TodayCommit updatedTodayCommit1 = todayCommitRepository.findById(todayCommit1.getPk()).get();
         assertThat(updatedTodayCommit1.getDone()).isTrue();
         assertThat(updatedTodayCommit1.getRecentlyPushedRepoName()).isEqualTo("newRepo1");
-        assertThat(updatedTodayCommit1.getCommitDoneCheckTime()).isNotNull();
+        assertThat(updatedTodayCommit1.getDoneCheckTime()).isNotNull();
 
         TodayCommit updatedTodayCommit2 = todayCommitRepository.findById(todayCommit2.getPk()).get();
         assertThat(updatedTodayCommit2.getDone()).isFalse();
         assertThat(updatedTodayCommit2.getRecentlyPushedRepoName()).isEqualTo("newRepo2");
-        assertThat(updatedTodayCommit2.getCommitDoneCheckTime()).isNotNull();
+        assertThat(updatedTodayCommit2.getDoneCheckTime()).isNotNull();
 
 
     }

@@ -16,12 +16,12 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class SimpleCommitHistoryApiAdapter implements CommitHistoryApiAdapter {
+public class SimpleGithubRepoCommitHistoryApiAdapter implements GithubRepoCommitHistoryApiAdapter {
     private final TokenGenerator tokenGenerator;
     private static final Integer INTERVAL_TIME = 9;
 
     @Override
-    public List getResponseBody(String username, String repoName, String sinceTime) {
+    public List request(String username, String repoName, String sinceTime) {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<List> commitHistoryEntity = restTemplate.exchange(
                 "https://api.github.com/repos/{username}/{reponame}/commits?since={sinceTime}",

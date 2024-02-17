@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class CommitCheckModel {
 
     private final Long todayCommitPk;
-    private final LocalDate checkDay;
+//    private final LocalDate checkDay;
     private LocalDateTime checkTime;
     private Boolean done;
     private final String recentlyPushedRepoName;

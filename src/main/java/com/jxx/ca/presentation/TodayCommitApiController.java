@@ -20,41 +20,30 @@ public class TodayCommitApiController {
 
     private final CommitManagerService commitManagerService;
 
-    @PostMapping("/users")
+    @PostMapping("/github-members")
     public void enrollUsers(@RequestBody List<UserEnrollForm> form) {
         commitManagerService.enrollMembers(form);
     }
 
-    @PatchMapping("/commits/renew-repo-name")
+    @PatchMapping("/today-commits/renew-repo-name")
     public void renewRepoNames() {
         commitManagerService.renewRepoNameAllUsers();
     }
 
-    // STEP 2
-    @PatchMapping("/commits/check-commit")
+    @PatchMapping("/today-commits/check-commit")
     public void checkCommitDone(@RequestParam("since") String sinceTime) {
-        commitManagerService.checkTodayCommit(sinceTime);
+        commitManagerService.checkTodayCommits(sinceTime);
     }
-//
-//    @GetMapping("/commits")
-//    public ResponseEntity<TodayCommitResult> getTodayCommits() {
-//        List<TodayCommitResponse> response = commitManagerService.findTodayCommits();
-//        return ResponseEntity.ok(new TodayCommitResult(HttpStatus.OK.value(), "당일 커밋 조회", LocalDate.now(), response));
-//    }
 
-    @GetMapping("/commits")
+    @PatchMapping("/today-commits/{today-commit-pk}/check-commit")
+    public void checkCommitDone(@PathVariable("today-commit-pk") Long todayCommitPk, @RequestParam("since") String sinceTime) {
+        commitManagerService.checkTodayCommit(todayCommitPk, sinceTime);
+    }
+
+    @GetMapping("/today-commits")
     public ResponseEntity<TodayCommitResult> getTodayCommit(@RequestParam(value = "namePattern", defaultValue = "") String namePattern) {
         List<TodayCommitResponse> response = commitManagerService.findTodayCommit(namePattern);
         return ResponseEntity.ok(new TodayCommitResult(HttpStatus.OK.value(), "당일 커밋 조회", LocalDate.now(), response));
     }
-
-
-    // STEP 3
-    @GetMapping("/notifications")
-    public void notificate() {
-        commitManagerService.notificate();
-    }
-
-    // 12시 되면 today, done 초기화 로직
 
 }

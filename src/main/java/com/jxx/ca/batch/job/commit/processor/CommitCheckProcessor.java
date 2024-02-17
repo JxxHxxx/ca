@@ -1,7 +1,7 @@
 package com.jxx.ca.batch.job.commit.processor;
 
 import com.jxx.ca.batch.job.commit.model.CommitCheckModel;
-import com.jxx.ca.github.api.CommitHistoryApiAdapter;
+import com.jxx.ca.github.api.GithubRepoCommitHistoryApiAdapter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.scope.context.StepSynchronizationManager;
@@ -14,14 +14,14 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CommitCheckProcessor implements ItemProcessor<CommitCheckModel, CommitCheckModel> {
     // 테스트 용이하게 하기 위해 인터페이스화
-    private final CommitHistoryApiAdapter commitHistoryApiAdapter;
+    private final GithubRepoCommitHistoryApiAdapter githubRepoCommitHistoryApiAdapter;
 
     @Override
     public CommitCheckModel process(CommitCheckModel item) throws Exception {
         Map<String, Object> jobParameters = StepSynchronizationManager.getContext().getJobParameters();
         String sinceTime = (String) jobParameters.get("sinceTime");
 
-        List commitHistory = commitHistoryApiAdapter.getResponseBody(item.getGithubName(), item.getRecentlyPushedRepoName(), sinceTime);
+        List commitHistory = githubRepoCommitHistoryApiAdapter.request(item.getGithubName(), item.getRecentlyPushedRepoName(), sinceTime);
 
         if (commitHistory.isEmpty()) {
             item.checkCommitDone(false);

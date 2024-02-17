@@ -34,7 +34,7 @@ public class TodayCommitTracer {
         return newMembers.stream()
                 .map(newMember -> {
                     String repoName = function.apply(newMember.getGithubName());
-                    log.info("사용자:{} 신규 등록 성공 여부:{}", newMember.getGithubName(), repoName == null ? "N":"Y");
+                    log.info("사용자:{} 신규 등록 성공 여부:{}", newMember.getGithubName(), repoName == null ? "N" : "Y");
                     return repoName == null ? null : new TodayCommit(newMember, repoName);
                 })
                 .filter(Objects::nonNull)
@@ -46,18 +46,27 @@ public class TodayCommitTracer {
             TodayCommit todayCommit = existingMember.getTodayCommit();
             String renewRepoName = function.apply(existingMember.getGithubName());
 
-            if (todayCommit.isSameRecentlyPushedRepoName(renewRepoName)) {
-                log.info("사용자:{} 갱신된 리포짓토리가 기존에 갱신된 리포짓토리와 동일합니다. write 대상이 아닙니다.",
-                        existingMember.getGithubName());
-            }
-            else if (Objects.isNull(renewRepoName)) {
-                log.info("사용자:{} 갱신된 리포짓토리를 불러올 수 없습니다.", existingMember.getGithubName());
-            }
-            else {
-                log.info("사용자:{} 리포짓토리가 갱신됩니다. before:{} -> after:{}",
-                        existingMember.getGithubName(), todayCommit.getRecentlyPushedRepoName(), renewRepoName);
+            if(checkRepoNameChanged(todayCommit.getRecentlyPushedRepoName(), renewRepoName, existingMember.getGithubName())) {
                 todayCommit.updateRecentlyPushedRepoName(renewRepoName); // dirty checking
             }
         }
     }
+
+    public static boolean checkRepoNameChanged(String recentlyPushedRepoName, String renewRepoName, String githubName) {
+        if (Objects.equals(recentlyPushedRepoName, renewRepoName)) {
+            log.info("사용자:{} 갱신된 리포짓토리가 기존에 갱신된 리포짓토리와 동일합니다. write 대상이 아닙니다.",
+                    githubName);
+            return false;
+        }
+
+        if (Objects.isNull(renewRepoName)) {
+            log.info("사용자:{} 리포짓토리 이름을 찾을 수 없습니다. write 대상이 아닙니다.", githubName);
+            return false;
+        }
+
+        log.info("사용자:{} 갱신된 레포짓토리 명:{}", githubName, renewRepoName);
+        return true;
+    }
 }
+
+

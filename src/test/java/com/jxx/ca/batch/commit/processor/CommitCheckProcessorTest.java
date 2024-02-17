@@ -3,7 +3,7 @@ package com.jxx.ca.batch.commit.processor;
 
 import com.jxx.ca.batch.job.commit.model.CommitCheckModel;
 import com.jxx.ca.batch.job.commit.processor.CommitCheckProcessor;
-import com.jxx.ca.github.api.CommitHistoryApiAdapter;
+import com.jxx.ca.github.api.GithubRepoCommitHistoryApiAdapter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,14 +22,14 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBatchTest
 class CommitCheckProcessorTest {
 
-    CommitHistoryApiAdapter commitHistoryApiAdapter;
+    GithubRepoCommitHistoryApiAdapter githubRepoCommitHistoryApiAdapter;
     CommitCheckProcessor commitCheckProcessor;;
 
     @BeforeEach
     void given() {
         // githubName 이 jxxHxxx 이면 빈 리스트, 비어있지 않은 리스트를 반환한다.
-        commitHistoryApiAdapter = (username, reponame, sinceTime) -> "jxxHxxx".equals(username) ? List.of() : List.of(username);
-        commitCheckProcessor = new CommitCheckProcessor(commitHistoryApiAdapter);
+        githubRepoCommitHistoryApiAdapter = (username, reponame, sinceTime) -> "jxxHxxx".equals(username) ? List.of() : List.of(username);
+        commitCheckProcessor = new CommitCheckProcessor(githubRepoCommitHistoryApiAdapter);
     }
 
     /**
@@ -42,7 +42,6 @@ class CommitCheckProcessorTest {
     void pass_commit_check_process() throws Exception {
         CommitCheckModel commitCheckModel = new CommitCheckModel(
                 1l,
-                LocalDate.now(),
                 LocalDateTime.now(),
                 true,
                 "xuniName",
@@ -61,7 +60,6 @@ class CommitCheckProcessorTest {
     void not_pass_commit_check_process() throws Exception {
         CommitCheckModel commitCheckModel = new CommitCheckModel(
                 1l,
-                LocalDate.now(),
                 LocalDateTime.now(),
                 true,
                 "jxxHxxName",

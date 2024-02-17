@@ -16,8 +16,7 @@ public class CommitReader {
     private final RowMapper<CommitCheckModel> rowMapper;
     private static final String READ_SQL =  "SELECT " +
             "TCM.TODAY_COMMIT_PK , " +
-            "TCM.RECENT_REPO_CHECK_DAY , " +
-            "TCM.COMMIT_DONE_CHECK_TIME , " +
+            "TCM.DONE_CHECK_TIME , " +
             "TCM.DONE , " +
             "TCM.RECENTLY_PUSHED_REPO_NAME , " +
             "JGMM.GITHUB_NAME," +

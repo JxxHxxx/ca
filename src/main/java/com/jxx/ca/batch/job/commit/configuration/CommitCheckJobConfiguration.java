@@ -11,7 +11,7 @@ import com.jxx.ca.batch.job.commit.reader.RenewRepoReader;
 import com.jxx.ca.batch.job.commit.writer.CommitCheckWriter;
 import com.jxx.ca.batch.job.commit.writer.RenewRepoWriter;
 import com.jxx.ca.batch.generator.IdentifyJobParameterGenerator;
-import com.jxx.ca.github.api.CommitHistoryApiAdapter;
+import com.jxx.ca.github.api.GithubRepoCommitHistoryApiAdapter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.ExitStatus;
@@ -41,7 +41,7 @@ public class CommitCheckJobConfiguration {
     private final RowMapper<RenewRepoModel> renewRepoModelRowMapper;
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
-    private final CommitHistoryApiAdapter commitHistoryApiAdapter;
+    private final GithubRepoCommitHistoryApiAdapter githubRepoCommitHistoryApiAdapter;
 
     @Bean(name = "commit-check.job")
     public Job commitCheckJob() {
@@ -110,7 +110,7 @@ public class CommitCheckJobConfiguration {
     public CompositeItemProcessor<CommitCheckModel, CommitCheckModel> commitCheckProcessors() {
         List<ItemProcessor<CommitCheckModel, CommitCheckModel>> delegates = new ArrayList<>();
         delegates.add(new ActiveValidateProcessor());
-        delegates.add(new CommitCheckProcessor(commitHistoryApiAdapter));
+        delegates.add(new CommitCheckProcessor(githubRepoCommitHistoryApiAdapter));
 
         CompositeItemProcessor<CommitCheckModel, CommitCheckModel> compositeProcessor =
                 new CompositeItemProcessor<>();

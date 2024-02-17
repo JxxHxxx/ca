@@ -25,7 +25,6 @@ class ActiveValidateProcessorTest {
     void pass_the_process() throws Exception {
         CommitCheckModel commitCheckModel = new CommitCheckModel(
                 1l,
-                LocalDate.now(),
                 LocalDateTime.now(),
                 true,
                 "jxxHxxName",
@@ -42,7 +41,6 @@ class ActiveValidateProcessorTest {
     void not_pass_the_process() throws Exception {
         CommitCheckModel commitCheckModel = new CommitCheckModel(
                 1l,
-                LocalDate.now(),
                 LocalDateTime.now(),
                 true,
                 "jxxHxxName",

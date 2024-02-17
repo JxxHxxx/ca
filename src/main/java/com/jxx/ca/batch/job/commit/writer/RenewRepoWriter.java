@@ -16,7 +16,7 @@ public class RenewRepoWriter {
     private final static String WRITE_SQL = "UPDATE " +
             "TODAY_COMMIT_MASTER " +
             "SET RECENTLY_PUSHED_REPO_NAME =:renewRepoName, " +
-            "    RECENT_REPO_CHECK_DAY =:recentRepoCheckDay " +
+            "    RECENTLY_PUSHED_REPO_NAME_CHECK_DAY =:recentRepoCheckDay " +
             "WHERE GITHUB_MEMBER_PK =:githubMemberPk ";
 
     public JdbcBatchItemWriter<RenewRepoModel> build() {

@@ -11,6 +11,9 @@ import org.hibernate.envers.NotAudited;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import static com.jxx.ca.domain.TodayCommitTableSchema.*;
+import static com.jxx.ca.domain.TodayCommitTableSchema.TODAY_COMMIT_MASTER;
+
 /**
  * 컬럼 명 변경 시
  * CommitReader,
@@ -23,60 +26,58 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "TODAY_COMMIT_MASTER")
+@Table(name = TODAY_COMMIT_MASTER)
 public class TodayCommit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "TODAY_COMMIT_PK")
+    @Column(name = TODAY_COMMIT_PK)
     @Comment("TodayCommit PK")
     private Long pk;
+
     @NotAudited
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "GITHUB_MEMBER_PK", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = GITHUB_MEMBER_PK, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private GithubMember githubMember;
-    @Column(name = "RECENT_REPO_CHECK_DAY")
-    @Comment("최근에 업데이트 된 리포짓토리를 탐색한 시간")
-    private LocalDate recentRepoCheckDay;
-    @Column(name = "RECENTLY_PUSHED_REPO_NAME")
+
+    @Column(name = RECENTLY_PUSHED_REPO_NAME_CHECK_DAY)
+    @Comment("RECENTLY_PUSHED_REPO_NAME 을 탐색한 날짜")
+    private LocalDate recentlyPushedRepoNameCheckDay;
+
+    @Column(name = RECENTLY_PUSHED_REPO_NAME)
     @Comment("최근에 업데이트 된 리포짓토리 이름")
     private String recentlyPushedRepoName;
-    @Column(name = "DONE")
+
+    @Column(name = DONE)
     @Comment(value = "1=커밋함 0=커밋안함")
     private Boolean done;
 
-    @Column(name = "COMMIT_DONE_CHECK_TIME")
-    @Comment(value = "커밋 여부 체크 시간")
-    private LocalDateTime commitDoneCheckTime;
+    @Column(name = DONE_CHECK_TIME)
+    @Comment(value = "DONE(커밋 여부)을 탐색한 시간")
+    private LocalDateTime doneCheckTime;
 
 
     public TodayCommit(GithubMember githubMember, String recentlyPushedRepoName) {
         this.githubMember = githubMember;
-        this.recentRepoCheckDay =  LocalDate.now();
+        this.recentlyPushedRepoNameCheckDay =  LocalDate.now();
         this.recentlyPushedRepoName = recentlyPushedRepoName;
         this.done = false;
-        this.commitDoneCheckTime = null;
+        this.doneCheckTime = null;
 
         this.githubMember.setTodayCommit(this);
     }
 
     public void checkCommitDone(Boolean done) {
         this.done = done;
-        commitDoneCheckTime = LocalDateTime.now();
+        doneCheckTime = LocalDateTime.now();
     }
 
     public void updateRecentlyPushedRepoName(String recentlyPushedRepoName) {
-        this.recentRepoCheckDay = LocalDate.now();
+        this.recentlyPushedRepoNameCheckDay = LocalDate.now();
         this.recentlyPushedRepoName = recentlyPushedRepoName;
     }
 
     public boolean isSameRecentlyPushedRepoName(String renewRepoName) {
         return recentlyPushedRepoName.equals(renewRepoName);
     }
-
-    public void initialize() {
-        recentRepoCheckDay = LocalDate.now();
-        done = false;
-    }
-
 }

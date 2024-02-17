@@ -6,7 +6,7 @@ import com.jxx.ca.domain.TodayCommitTracer;
 import com.jxx.ca.domain.TodayCommit;
 import com.jxx.ca.dto.response.TodayCommitInformation;
 import com.jxx.ca.dto.response.TodayCommitResponse;
-import com.jxx.ca.github.api.CommitHistoryApiAdapter;
+import com.jxx.ca.github.api.GithubRepoCommitHistoryApiAdapter;
 import com.jxx.ca.github.authorization.TokenGenerator;
 import com.jxx.ca.infra.GithubMemberRepository;
 import com.jxx.ca.infra.TodayCommitRepository;
@@ -24,7 +24,7 @@ public class CommitManagerService {
 
     private final GithubMemberRepository githubMemberRepository;
     private final TodayCommitRepository todayCommitRepository;
-    private final CommitHistoryApiAdapter commitHistoryApiAdapter;
+    private final GithubRepoCommitHistoryApiAdapter githubRepoCommitHistoryApiAdapter;
     private final TokenGenerator tokenGenerator;
 
     @Transactional
@@ -54,19 +54,27 @@ public class CommitManagerService {
         List<TodayCommit> todayCommits = todayCommitTracer.createTodayCommit(repoFindFunction);
         todayCommitRepository.saveAll(todayCommits);
     }
+
     @Transactional
-    public void checkTodayCommit(String sinceTime) {
+    public void checkTodayCommits(String sinceTime) {
         List<TodayCommit> todayCommits = todayCommitRepository.findAll();
+        todayCommits.forEach(todayCommit -> changeCommitDone(sinceTime, todayCommit));
+    }
 
-        for (TodayCommit todayCommit : todayCommits) {
-            List commitHistory = commitHistoryApiAdapter.getResponseBody(todayCommit.getGithubMember().getGithubName(),
-                    todayCommit.getRecentlyPushedRepoName(), sinceTime);
+    @Transactional
+    public void checkTodayCommit(Long todayCommitPk, String sinceTime) {
+        TodayCommit todayCommit = todayCommitRepository.findById(todayCommitPk).orElseThrow(() -> new IllegalArgumentException());
+        changeCommitDone(sinceTime, todayCommit);
+    }
 
-            if (commitHistory.isEmpty()) {
-                todayCommit.checkCommitDone(false);
-            } else {
-                todayCommit.checkCommitDone(true);
-            }
+    private void changeCommitDone(String sinceTime, TodayCommit todayCommit) {
+        List commitHistory = githubRepoCommitHistoryApiAdapter.request(todayCommit.getGithubMember().getGithubName(),
+                todayCommit.getRecentlyPushedRepoName(), sinceTime);
+
+        if (commitHistory.isEmpty()) {
+            todayCommit.checkCommitDone(false);
+        } else {
+            todayCommit.checkCommitDone(true);
         }
     }
 

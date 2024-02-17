@@ -1,22 +1,19 @@
 package com.jxx.ca.github.api;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.Assertions.*;
 
 
 @SpringBootTest
-class SimpleCommitHistoryApiAdapterTest {
+class SimpleGithubRepoCommitHistoryApiAdapterTest {
 
     @Autowired
-    SimpleCommitHistoryApiAdapter simpleCommitHistoryApiAdapter;
+    SimpleGithubRepoCommitHistoryApiAdapter simpleCommitHistoryApiAdapter;
 
     @Test
     void adjust_since_time() {
